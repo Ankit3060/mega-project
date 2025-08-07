@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import cors from "cors";
 import { connectDB } from "./Database/db.js";
-// import userRouter from "./Routes/user.router.js";
+import userRouter from "./Routes/userRoutes.js";
 
 export const app = express();
 
@@ -19,7 +19,6 @@ app.use(cookieParser());
 app.use(urlencoded({extended: true}));
 app.use(express.json());
 
-
-// app.use("/api/v1/user",userRouter);
+app.use("/api/v1/user", userRouter);
 
 connectDB();

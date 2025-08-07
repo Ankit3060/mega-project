@@ -27,16 +27,13 @@ const userSchema = new mongoose.Schema({
     avatar: {
         public_id: String,
         url : String,
-        required: false
     },
     coverImage: {
         public_id: String,
-        url: String,
-        required: false
+        url: String
     },
     phone: {
         type: Number,
-        required: false,
         unique: true
     },
     role: {
