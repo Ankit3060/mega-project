@@ -1,12 +1,12 @@
-import { generateVerificationOtpEmailTemplate } from "./emailTemplates.js";
+import { generatePasswordResetEmailTemplate } from "./emailTemplates.js";
 import { sendEmail } from "./sendEmail.js";
 
-export async function sendVerificationCode(verificationCode, email, res){
+export async function sendPasswordResetCode(resetPasswordUrl, email, res){
     try {
-        const message = generateVerificationOtpEmailTemplate(verificationCode);
+        const message = generatePasswordResetEmailTemplate(resetPasswordUrl);
         sendEmail({
             email,
-            subject: "Verification Code from AK Blog Team",
+            subject: "Password Reset Code from AK Blog Team",
             message
         });
 

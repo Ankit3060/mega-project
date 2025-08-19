@@ -254,3 +254,331 @@ export const generateSuccessfulSubmissionBlogTemplate = (blogTitle, blogUrl, aut
 </body>
 </html>`;
 };
+
+
+
+export const generatePasswordResetEmailTemplate = (resetPasswordUrl) => {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7fafc;">
+    
+    <!-- Main Container -->
+    <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%); padding: 40px 20px; min-height: 100vh;">
+        
+        <!-- Email Container -->
+        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); overflow: hidden;">
+            
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 30px 40px; text-align: center;">
+                <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3);">
+                    <span style="font-size: 40px;">🔑</span>
+                </div>
+                <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                    Password Reset Request
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">
+                    Secure your account with a new password
+                </p>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 50px 40px;">
+                
+                <!-- Greeting -->
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h2 style="color: #2d3748; margin: 0 0 15px 0; font-size: 24px; font-weight: 600;">
+                        Reset Your Password
+                    </h2>
+                    <p style="color: #718096; font-size: 16px; line-height: 1.6; margin: 0;">
+                        We received a request to reset your password for your AK Blog account. 
+                        Click the button below to create a new password.
+                    </p>
+                </div>
+                
+                <!-- Reset Button -->
+                <div style="text-align: center; margin: 40px 0;">
+                    <a href="${resetPasswordUrl}" style="display: inline-block; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 600; font-size: 18px; box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3); transition: all 0.3s ease; letter-spacing: 0.5px;">
+                        🔐 Reset My Password
+                    </a>
+                </div>
+                
+                <!-- Alternative Link -->
+                <div style="background: #f8f9ff; border-left: 4px solid #dc2626; padding: 20px 25px; border-radius: 8px; margin: 30px 0;">
+                    <h3 style="color: #dc2626; margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">
+                        🔗 Alternative Access:
+                    </h3>
+                    <p style="color: #4a5568; margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">
+                        If the button above doesn't work, copy and paste this link into your browser:
+                    </p>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; word-break: break-all;">
+                        <code style="color: #3b82f6; font-size: 13px; font-family: 'Courier New', monospace;">
+                            ${resetPasswordUrl}
+                        </code>
+                    </div>
+                </div>
+                
+                <!-- Security Notice -->
+                <div style="background: #fef7ff; border: 2px solid #f3e8ff; border-radius: 12px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #7c3aed; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        🛡️ Security Information
+                    </h3>
+                    <ul style="color: #6b46c1; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+                        <li>This reset link is valid for <strong>1 hour</strong> from the time it was sent</li>
+                        <li>You can only use this link <strong>once</strong> to reset your password</li>
+                        <li>After using the link, it will become invalid automatically</li>
+                        <li>Choose a strong password with at least 8 characters</li>
+                    </ul>
+                </div>
+                
+                <!-- Important Notice -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <div style="background: #fff5f5; border: 1px solid #fed7d7; color: #c53030; padding: 20px; border-radius: 12px; font-size: 14px;">
+                        ⚠️ <strong>Didn't request this?</strong><br/>
+                        If you didn't request a password reset, please ignore this email. 
+                        Your password will remain unchanged and secure.
+                    </div>
+                </div>
+                
+                <!-- Tips Section -->
+                <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 12px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        💡 Password Security Tips
+                    </h3>
+                    <div style="color: #047857; font-size: 14px; line-height: 1.6;">
+                        <p style="margin: 0 0 10px 0;">• Use a combination of uppercase, lowercase, numbers, and symbols</p>
+                        <p style="margin: 0 0 10px 0;">• Avoid using personal information like birthdays or names</p>
+                        <p style="margin: 0 0 10px 0;">• Consider using a password manager for better security</p>
+                        <p style="margin: 0;">• Don't reuse passwords from other accounts</p>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f7fafc; padding: 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">
+                        Need Additional Help?
+                    </h4>
+                    <p style="color: #6b7280; margin: 0 0 15px 0; font-size: 14px; line-height: 1.5;">
+                        Having trouble resetting your password or have security concerns?
+                    </p>
+                    <a href="mailto:dtspecial330660@gmail.com" style="color: #dc2626; text-decoration: none; font-weight: 500; font-size: 14px;">
+                        📧 Contact Support Team
+                    </a>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <p style="color: #4b5563; margin: 0; font-size: 16px;">
+                        Stay secure and keep blogging!<br/>
+                        <strong style="color: #dc2626; font-size: 20px;">The AK Blog Team</strong>
+                    </p>
+                </div>
+                
+                <!-- Account Security Notice -->
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0 0 10px 0;">
+                        This is an automated security email. Please do not reply to this message.
+                    </p>
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                        For your security, this link will expire in 1 hour.
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Bottom Spacer -->
+        <div style="height: 40px;"></div>
+        
+    </div>
+    
+</body>
+</html>`;
+};
+
+
+
+export const generateAccountDeleteTemplate = (verifyLink, otp) => {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Verification Required</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7fafc;">
+    
+    <!-- Main Container -->
+    <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%); padding: 40px 20px; min-height: 100vh;">
+        
+        <!-- Email Container -->
+        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); overflow: hidden;">
+            
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); padding: 30px 40px; text-align: center;">
+                <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3);">
+                    <span style="font-size: 40px;">⚠️</span>
+                </div>
+                <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                    Account Verification Required
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">
+                    Verify now to prevent account deletion
+                </p>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 50px 40px;">
+                
+                <!-- Greeting -->
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h2 style="color: #2d3748; margin: 0 0 15px 0; font-size: 24px; font-weight: 600;">
+                        Action Required: Verify Your Account
+                    </h2>
+                    <p style="color: #718096; font-size: 16px; line-height: 1.6; margin: 0;">
+                        Your account is scheduled for deletion due to lack of verification. 
+                        Please verify your account immediately to prevent deletion.
+                    </p>
+                </div>
+                
+                <!-- Urgency Notice -->
+                <div style="background: #fef2f2; border: 2px solid #fca5a5; border-radius: 12px; padding: 20px; margin: 30px 0; text-align: center;">
+                    <p style="color: #dc2626; margin: 0; font-size: 16px; font-weight: 600;">
+                        ⏰ <strong>Time Sensitive:</strong> Limited time remaining to verify your account
+                    </p>
+                </div>
+                
+                <!-- OTP Code Display -->
+                <div style="text-align: center; margin: 40px 0;">
+                    <h3 style="color: #374151; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">
+                        Verification Method 1: OTP Code
+                    </h3>
+                    <p style="color: #6b7280; margin: 0 0 20px 0; font-size: 14px;">
+                        Use this verification code:
+                    </p>
+                    
+                    <div style="display: inline-block; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 3px solid #e2e8f0; border-radius: 16px; padding: 25px 35px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+                        <div style="color: #2d3748; font-size: 36px; font-weight: 800; letter-spacing: 12px; font-family: 'Courier New', monospace; margin: 0;">
+                            ${otp}
+                        </div>
+                    </div>
+                    
+                    <p style="color: #ef4444; margin: 15px 0 0 0; font-size: 12px; font-weight: 500;">
+                        This code expires in 15 minutes
+                    </p>
+                </div>
+                
+                <!-- Verification Link -->
+                <div style="text-align: center; margin: 40px 0;">
+                    <h3 style="color: #374151; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        Verification Method 2: Direct Link
+                    </h3>
+                    <p style="color: #6b7280; margin: 0 0 25px 0; font-size: 14px;">
+                        Or click the button below to verify instantly:
+                    </p>
+                    
+                    <a href="${verifyLink}" style="display: inline-block; background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 600; font-size: 18px; box-shadow: 0 8px 20px rgba(217, 119, 6, 0.3); transition: all 0.3s ease; letter-spacing: 0.5px;">
+                        🔐 Verify My Account Now
+                    </a>
+                </div>
+                
+                <!-- Instructions -->
+                <div style="background: #f8f9ff; border-left: 4px solid #d97706; padding: 20px 25px; border-radius: 8px; margin: 30px 0;">
+                    <h3 style="color: #d97706; margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">
+                        📝 How to verify:
+                    </h3>
+                    <ul style="color: #4a5568; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6;">
+                        <li>Copy the 6-digit OTP code above</li>
+                        <li>Return to the verification page</li>
+                        <li>Enter the code in the verification field</li>
+                        <li>Or simply click the verification button above</li>
+                    </ul>
+                </div>
+                
+                <!-- What Happens Next -->
+                <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 12px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        ✅ After Verification:
+                    </h3>
+                    <div style="color: #047857; font-size: 14px; line-height: 1.6;">
+                        <p style="margin: 0 0 10px 0;">• Your account will be fully activated and secured</p>
+                        <p style="margin: 0 0 10px 0;">• Access to all platform features will be restored</p>
+                        <p style="margin: 0 0 10px 0;">• No more verification reminders or deletion warnings</p>
+                        <p style="margin: 0;">• Your data and content will be safely preserved</p>
+                    </div>
+                </div>
+                
+                <!-- Security Notice -->
+                <div style="background: #fef7ff; border: 2px solid #f3e8ff; border-radius: 12px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #7c3aed; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        🛡️ Security Information
+                    </h3>
+                    <ul style="color: #6b46c1; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+                        <li>This verification link is valid for <strong>24 hours</strong></li>
+                        <li>The OTP code expires in <strong>15 minutes</strong></li>
+                        <li>Both methods are equally secure and valid</li>
+                        <li>Complete verification to prevent account deletion</li>
+                    </ul>
+                </div>
+                
+                <!-- Important Notice -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <div style="background: #fff5f5; border: 1px solid #fed7d7; color: #c53030; padding: 20px; border-radius: 12px; font-size: 14px;">
+                        ⚠️ <strong>Didn't request this?</strong><br/>
+                        If you didn't request account verification or if you believe this email was sent in error, 
+                        please contact our support team immediately.
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f7fafc; padding: 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">
+                        Need Help?
+                    </h4>
+                    <p style="color: #6b7280; margin: 0 0 15px 0; font-size: 14px; line-height: 1.5;">
+                        Having trouble verifying your account or have questions about this process?
+                    </p>
+                    <a href="mailto:dtspecial330660@gmail.com" style="color: #d97706; text-decoration: none; font-weight: 500; font-size: 14px;">
+                        📧 Contact Support Team
+                    </a>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <p style="color: #4b5563; margin: 0; font-size: 16px;">
+                        We're here to help keep your account secure!<br/>
+                        <strong style="color: #d97706; font-size: 20px;">The AK Blog Team</strong>
+                    </p>
+                </div>
+                
+                <!-- Legal Notice -->
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0 0 10px 0;">
+                        This is an automated security email. Please do not reply to this message.
+                    </p>
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                        For your security, verification codes and links have limited validity periods.
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Bottom Spacer -->
+        <div style="height: 40px;"></div>
+        
+    </div>
+    
+</body>
+</html>`;
+};
