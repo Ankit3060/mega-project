@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export const connectDB = async ()=>{
-    mongoose.connect(process.env.MONGO_URI,{dbName: "Mega_Project"})
+    await mongoose.connect(process.env.MONGO_URI,{dbName: "Mega_Project"})
         .then(()=>{
             console.log("DB Connected Successfully");
         })

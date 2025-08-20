@@ -8,7 +8,8 @@ import {
     updateUserDetails,
     updatePassword,
     forgetPassword,
-    resetPassword
+    resetPassword,
+    // refreshAccessToken
 } from '../Controller/userController.js';
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post('/logout', logoutUser);
 router.put('/update-details/:userId', updateUserDetails);
 router.put('/update-password/:userId', updatePassword);
 router.post('/forget-password', forgetPassword);
-router.put('/reset-password/:token', resetPassword)
+router.put('/reset-password/:token', resetPassword);
+// router.post('/refresh-token',refreshAccessToken);
 
 export default router;

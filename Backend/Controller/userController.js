@@ -6,6 +6,7 @@ import { sendToken } from "../Utils/sendToken.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
 import crypto from "crypto";
+import jwt from "jsonwebtoken"
 
 export const registerUser = async (req, res) => {
   try {
@@ -280,7 +281,10 @@ export const loginUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   try {
-    return res.status(200).cookie("token", "", {
+    return res.status(200).cookie("refreshToken", "", {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    }).cookie("accessToken","",{
       expires: new Date(Date.now()),
       httpOnly: true,
     })
@@ -640,3 +644,47 @@ export const resetPassword = async (req, res) => {
   }
 
 }
+
+
+// export const refreshAccessToken = async(req, res)=>{
+//   const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
+
+//   if(!incomingRefreshToken){
+//     return res.status(401).json({
+//       statusCode: 401,
+//       success: false,
+//       message: "unauthorized request"
+//     })
+//   }
+
+//   try {
+//     const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_KEY);
+
+//     const user = await User.findById(decoded?._id);
+//     if(!user){
+//       return res.status(400).json({
+//         statusCode:400,
+//         success: false,
+//         message: "Invalid refresh token"
+//       })
+//     }
+
+//     if(incomingRefreshToken !== user?.refreshToken){
+//       return res.status(400).json({
+//         statusCode: 400,
+//         success: false,
+//         message: "Referesh Token is expired or invalid"
+//       })
+//     }
+
+//     sendToken(user, 200, "Token created successful",res);
+
+
+//   } catch (error) {
+//     return res.status(401).json({
+//         statusCode: 401,
+//         success: false,
+//         message: "Invalid or expired refresh token"
+//       })
+//   }
+// }

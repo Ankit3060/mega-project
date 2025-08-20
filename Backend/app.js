@@ -2,7 +2,6 @@ import express,{urlencoded} from "express";
 import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import cors from "cors";
-import { connectDB } from "./Database/db.js";
 import userRouter from "./Routes/userRoutes.js";
 import expressFileupload from "express-fileupload";
 import {removeUnverifiedAccounts} from "./Service/removeUnverifiedAccount.js";
@@ -47,4 +46,4 @@ removeUnverifiedOtp();
 removeUnverifiedTokens();
 notifyUserAccountDelete();
 
-connectDB();
+// connectDB();

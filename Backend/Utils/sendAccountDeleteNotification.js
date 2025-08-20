@@ -1,7 +1,7 @@
 import { generateAccountDeleteTemplate } from "./emailTemplates.js";
 import { sendEmail } from "./sendEmail.js";
 
-export async function sendAccountDeleteNotification(verifyLink, otp, email){
+export async function sendAccountDeleteNotification(verifyLink, otp, email) {
     try {
         const message = generateAccountDeleteTemplate(verifyLink, otp);
         sendEmail({
@@ -10,16 +10,9 @@ export async function sendAccountDeleteNotification(verifyLink, otp, email){
             message
         });
 
-        return res.status(200).json({
-            statusCode: 200,
-            success: true,
-            message: "Account deletion notification sent successfully"
-        });
+        console.log(`Sending account delete notification to ${email}`);
     } catch (error) {
-        return res.status(500).json({
-            statusCode: 500,
-            success: false,
-            message: "Error sending account deletion notification"
-        });
+        console.error("Error sending notification:", error.message);
+        throw error;
     }
 } 
