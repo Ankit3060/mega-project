@@ -21,13 +21,13 @@ export const registerUser = async (req, res) => {
     }
 
     const isUserExists = await User.findOne({
-      $or: [{ email }, { userName }],
+      $or: [{ email }, { userName }, {phone}],
     });
     if (isUserExists) {
       return res.status(400).json({
         statusCode: 400,
         success: false,
-        message: "User already exists with this email or username",
+        message: "User already exists with this email or username or phone",
       });
     }
 
@@ -120,7 +120,7 @@ export const registerUser = async (req, res) => {
 
     const verificationCode = await user.generateVerificationCode();
 
-    await user.save({ validateModifiedOnly: true });
+    await user.save();
 
     sendVerificationCode(verificationCode, email, res);
   } catch (error) {
@@ -153,7 +153,18 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
+    if(user.otpFailedAttempt>=5){
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Too many failed OTP attempts. Please try 1hr later."
+      })
+    }
+
     if (!user.verificationCode || user.verificationCode !== Number(otp)) {
+      user.otpFailedAttempt += 1;
+      user.lastOtpTime = Date.now();
+      await user.save();
       return res.status(400).json({
         statusCode: 400,
         success: false,
@@ -176,6 +187,7 @@ export const verifyOtp = async (req, res) => {
     user.accountVerified = true;
     user.verificationCode = undefined;
     user.verificationCodeExpires = undefined;
+    user.otpFailedAttempt = undefined;
 
     await user.save({ validateModifiedOnly: true });
 
@@ -210,9 +222,19 @@ export const resendOtp = async (req, res) => {
       });
     }
 
-    const verificationCode = await user.generateVerificationCode();
+    if(user.otpGenerated>=5){
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Too many OTP generated. Please try 1hr later."
+      })
+    }
 
-    await user.save({ validateModifiedOnly: true });
+    const verificationCode = await user.generateVerificationCode();
+    user.otpGenerated += 1;
+    user.lastOtpTime = Date.now();
+
+    await user.save();
 
     sendVerificationCode(verificationCode, email, res);
   } catch (error) {
@@ -266,9 +288,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    user.password = undefined;
-
-    sendToken(user, 200, "Login successful", res);
+    await sendToken(user, 200, "Login successful", res);
   } catch (error) {
     return res.status(500).json({
       statusCode: 500,
@@ -281,6 +301,10 @@ export const loginUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   try {
+    if (req.user) {
+      await User.findByIdAndUpdate(req.user._id, { $unset: { refreshToken: 1 } });
+    }
+
     return res.status(200).cookie("refreshToken", "", {
       expires: new Date(Date.now()),
       httpOnly: true,
@@ -563,9 +587,18 @@ export const forgetPassword = async (req, res) => {
       });
     }
 
-    const resetToken = user.getResetPasswordToken();
+    if(user.resetTokenGeneratedTime>=5){
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Too many Token generated. Please try 1hr later."
+      })
+    }
 
-    await user.save({ validateBeforeSave: false });
+    const resetToken = user.getResetPasswordToken();
+    user.resetTokenGeneratedTime += 1;
+    user.lastResetTokenTime = Date.now();
+    await user.save();
 
     const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
 
@@ -577,7 +610,6 @@ export const forgetPassword = async (req, res) => {
       message: "Error sending password reset code"
     });
   }
-
 }
 
 
@@ -632,8 +664,6 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
 
-    user.password = undefined;
-
     sendToken(user, 200, "Password reset successfully", res)
   } catch (error) {
     return res.status(500).json({
@@ -646,45 +676,45 @@ export const resetPassword = async (req, res) => {
 }
 
 
-// export const refreshAccessToken = async(req, res)=>{
-//   const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
+export const refreshAccessToken = async(req, res)=>{
+  const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
 
-//   if(!incomingRefreshToken){
-//     return res.status(401).json({
-//       statusCode: 401,
-//       success: false,
-//       message: "unauthorized request"
-//     })
-//   }
+  if(!incomingRefreshToken){
+    return res.status(401).json({
+      statusCode: 401,
+      success: false,
+      message: "unauthorized request"
+    })
+  }
 
-//   try {
-//     const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_KEY);
+  try {
+    const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_KEY);
 
-//     const user = await User.findById(decoded?._id);
-//     if(!user){
-//       return res.status(400).json({
-//         statusCode:400,
-//         success: false,
-//         message: "Invalid refresh token"
-//       })
-//     }
+    const userId = decoded?.id || decoded?._id
+    const user = await User.findById(userId);
+    if(!user){
+      return res.status(400).json({
+        statusCode:400,
+        success: false,
+        message: "Invalid refresh token"
+      })
+    }
 
-//     if(incomingRefreshToken !== user?.refreshToken){
-//       return res.status(400).json({
-//         statusCode: 400,
-//         success: false,
-//         message: "Referesh Token is expired or invalid"
-//       })
-//     }
+    if(incomingRefreshToken !== user?.refreshToken){
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Referesh Token is expired or invalid"
+      })
+    }
 
-//     sendToken(user, 200, "Token created successful",res);
+    sendToken(user, 200, "Token created successful",res);
 
-
-//   } catch (error) {
-//     return res.status(401).json({
-//         statusCode: 401,
-//         success: false,
-//         message: "Invalid or expired refresh token"
-//       })
-//   }
-// }
+  } catch (error) {
+    return res.status(401).json({
+        statusCode: 401,
+        success: false,
+        message: "Invalid or expired refresh token"
+      })
+  }
+}

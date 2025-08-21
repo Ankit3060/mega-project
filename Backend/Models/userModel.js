@@ -1,13 +1,13 @@
 import mongoose, { mongo } from "mongoose";
-import  jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import crypto from "crypto"
 
 const userSchema = new mongoose.Schema({
-    fullName : {
+    fullName: {
         type: String,
         required: true,
     },
-    email:{
+    email: {
         type: String,
         required: true,
         unique: true,
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         public_id: String,
-        url : String,
+        url: String,
     },
     coverImage: {
         public_id: String,
@@ -42,44 +42,65 @@ const userSchema = new mongoose.Schema({
         enum: ["User", "Admin"],
         default: "User"
     },
-    verificationCode: Number,
-    verificationCodeExpires: Date,
     accountVerified: {
         type: Boolean,
         default: false
     },
-    resetPasswordToken: String,
-    resetPasswordTokenExpire: Date,
-    notified:{
+    notified: {
         type: Boolean,
         default: false
     },
+    verificationCode: Number,
+    verificationCodeExpires: Date,
+    otpGenerated: {
+        type: Number,
+        default: 0,
+        max: 5
+    },
+    lastOtpTime: {
+        type: Date,
+    },
+    otpFailedAttempt: {
+        type: Number,
+        default: 0,
+        max: 5
+    },
+    resetPasswordToken: String,
+    resetPasswordTokenExpire: Date,
+    resetTokenGeneratedTime: {
+        type: Number,
+        default: 0,
+        max: 5
+    },
+    lastResetTokenTime: {
+        type: Date,
+    },
     refreshToken: {
-        type :String
+        type: String
     }
 
-},{timestamps: true});
+}, { timestamps: true });
 
 
-userSchema.methods.generateVerificationCode = function(){
-    function generateRandomFiveDigitNumber(){
-        const firstDigit = Math.floor(Math.random()*9)+1;
-        const remainingDigit = Math.floor(Math.random()*10000).toString().padStart(4,0);
-        return parseInt(firstDigit+remainingDigit);
+userSchema.methods.generateVerificationCode = function () {
+    function generateRandomFiveDigitNumber() {
+        const firstDigit = Math.floor(Math.random() * 9) + 1;
+        const remainingDigit = Math.floor(Math.random() * 10000).toString().padStart(4, 0);
+        return parseInt(firstDigit + remainingDigit);
     }
 
     const verificationCode = generateRandomFiveDigitNumber();
     this.verificationCode = verificationCode;
-    this.verificationCodeExpires = Date.now()+15*60*1000;
+    this.verificationCodeExpires = Date.now() + 15 * 60 * 1000;
 
     return verificationCode;
 }
 
 
 
-userSchema.methods.generateAccessToken = function(){
+userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
-        {id: this._id},
+        { id: this._id },
         process.env.ACCESS_TOKEN_KEY,
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
@@ -88,9 +109,9 @@ userSchema.methods.generateAccessToken = function(){
 }
 
 
-userSchema.methods.generateRefreshToken = function(){
+userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
-        {id : this._id},
+        { id: this._id },
         process.env.REFRESH_TOKEN_KEY,
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
@@ -99,15 +120,15 @@ userSchema.methods.generateRefreshToken = function(){
 }
 
 
-userSchema.methods.getResetPasswordToken = function(){
+userSchema.methods.getResetPasswordToken = function () {
     const resetToken = crypto.randomBytes(20).toString("hex");
 
     this.resetPasswordToken = crypto
-                                .createHash("sha256")
-                                .update(resetToken)
-                                .digest("hex");
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
 
-    this.resetPasswordTokenExpire = Date.now()+15*60*1000;
+    this.resetPasswordTokenExpire = Date.now() + 15 * 60 * 1000;
     return resetToken;
 }
 

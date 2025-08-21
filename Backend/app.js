@@ -8,6 +8,8 @@ import {removeUnverifiedAccounts} from "./Service/removeUnverifiedAccount.js";
 import {removeUnverifiedOtp} from "./Service/removeUnverifiedOtp.js";
 import {removeUnverifiedTokens} from "./Service/removeUnverifiedToken.js";
 import {notifyUserAccountDelete} from "./Service/notifyAccountDelete.js";
+import {updateOtpAttempt} from "./Service/updateOtpAttempt.js"
+import {updateTokenAttempt} from "./Service/updateTokenAttempt.js"
 
 export const app = express();
 
@@ -45,5 +47,7 @@ removeUnverifiedAccounts();
 removeUnverifiedOtp();
 removeUnverifiedTokens();
 notifyUserAccountDelete();
+updateOtpAttempt();
+updateTokenAttempt()
 
 // connectDB();
