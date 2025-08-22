@@ -1,16 +1,16 @@
-import { generatePostPublishedSuccessfullyTemplate } from "./emailTemplates.js";
+import { generatePostUpdatedSuccessfullyTemplate } from "./emailTemplates.js";
 import { sendEmail } from "./sendEmail.js";
 
-export async function sendSuccessfulPostMail(postUrl, email){
+export async function sendSuccessfulPostUpdateMail(postUrl, email){
     try {
-        const message = generatePostPublishedSuccessfullyTemplate(postUrl);
+        const message = generatePostUpdatedSuccessfullyTemplate(postUrl);
         sendEmail({
             email: email,
             subject: "Post published successfully",
             message
         });
 
-        console.log(`Sending post published mail to ${email}`);
+        console.log(`Sending post updated mail to ${email}`);
     } catch (error) {
         console.error("Error sending notification:", error.message);
         throw error;

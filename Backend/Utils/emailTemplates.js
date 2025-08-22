@@ -582,3 +582,281 @@ export const generateAccountDeleteTemplate = (verifyLink, otp) => {
 </body>
 </html>`;
 };
+
+
+
+export const generatePostPublishedSuccessfullyTemplate = (postUrl) => {
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Published Successfully</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f9ff;">
+    
+    <!-- Main Container -->
+    <div style="background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #3b82f6 100%); padding: 40px 20px; min-height: 100vh;">
+        
+        <!-- Email Container -->
+        <div style="max-width: 650px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); overflow: hidden;">
+            
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 40px; text-align: center; position: relative;">
+                <!-- Success Icon -->
+                <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3);">
+                    <span style="font-size: 40px;">🎉</span>
+                </div>
+                <h1 style="color: white; margin: 0 0 10px 0; font-size: 32px; font-weight: 700; letter-spacing: -0.5px;">
+                    Post Published Successfully!
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 18px; font-weight: 400;">
+                    Your content is now live and ready for readers
+                </p>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 50px 40px;">
+                
+                <!-- Congratulations Message -->
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h2 style="color: #1f2937; margin: 0 0 15px 0; font-size: 26px; font-weight: 600;">
+                        🚀 Amazing work!
+                    </h2>
+                    <p style="color: #6b7280; font-size: 16px; line-height: 1.6; margin: 0;">
+                        Your post has been successfully published and is now live on AK Blog. 
+                        It's ready to inspire and engage our community of readers.
+                    </p>
+                </div>
+                
+                <!-- Post Details Card -->
+                <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 20px; padding: 30px; margin: 30px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.06);">
+                    <h3 style="color: #1e40af; margin: 0 0 20px 0; font-size: 20px; font-weight: 600; display: flex; align-items: center;">
+                        📝 Your Published Post
+                    </h3>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 5px solid #10b981;">
+                        <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 600; line-height: 1.4;">
+                            "Your Amazing Post"
+                        </h4>
+                        <p style="color: #6b7280; margin: 0 0 20px 0; font-size: 14px;">
+                            Published successfully • Just now
+                        </p>
+                        
+                        <!-- Call-to-Action Button -->
+                        <div style="text-align: center; margin-top: 25px;">
+                            <a href="${postUrl}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 600; font-size: 18px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); transition: all 0.3s ease; letter-spacing: 0.5px;">
+                                🔗 View Your Post
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- What's Next Section -->
+                <div style="background: #fefce8; border: 2px solid #fde047; border-radius: 16px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #a16207; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        🎯 What's Next?
+                    </h3>
+                    <ul style="color: #92400e; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+                        <li><strong>Share your post:</strong> Spread the word on social media platforms</li>
+                        <li><strong>Engage with readers:</strong> Respond to comments and build connections</li>
+                        <li><strong>Track performance:</strong> Monitor views and engagement metrics</li>
+                        <li><strong>Keep writing:</strong> Plan your next amazing piece of content</li>
+                        <li><strong>Build your audience:</strong> Promote across your networks</li>
+                    </ul>
+                </div>
+                
+                <!-- Share Options -->
+                <div style="text-align: center; margin: 40px 0;">
+                    <h3 style="color: #374151; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">
+                        📢 Share Your Post
+                    </h3>
+                    <p style="color: #6b7280; margin: 0 0 20px 0; font-size: 14px;">
+                        Get more eyes on your content by sharing across platforms:
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                        <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent('Check out my latest post on AK Blog!')}" style="display: inline-block; background: #1da1f2; color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);">
+                            🐦 Twitter
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}" style="display: inline-block; background: #4267b2; color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(66, 103, 178, 0.3);">
+                            📘 Facebook
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}" style="display: inline-block; background: #0077b5; color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);">
+                            💼 LinkedIn
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Performance Tips -->
+                <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 16px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #374151; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        💡 Pro Tips for Better Engagement
+                    </h3>
+                    <div style="color: #4b5563; font-size: 14px; line-height: 1.6;">
+                        <p style="margin: 0 0 10px 0;">• Respond to comments within the first 24 hours for better reach</p>
+                        <p style="margin: 0 0 10px 0;">• Share behind-the-scenes content about your writing process</p>
+                        <p style="margin: 0 0 10px 0;">• Engage with other creators' content to build community</p>
+                        <p style="margin: 0;">• Consider creating a series if this topic resonates well</p>
+                    </div>
+                </div>
+                
+                <!-- Community Stats -->
+                <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center;">
+                    <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        🌟 You're Part of Something Amazing
+                    </h3>
+                    <p style="color: #047857; margin: 0; font-size: 14px; line-height: 1.6;">
+                        Your post joins our thriving community of <strong>15,000+ active readers</strong> and <strong>500+ talented writers</strong> on AK Blog. Together, we're building a platform where great content finds its audience.
+                    </p>
+                </div>
+                
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f9fafb; padding: 40px; text-align: center; border-top: 1px solid #e5e7eb;">
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #374151; margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">
+                        Need Support?
+                    </h4>
+                    <p style="color: #6b7280; margin: 0 0 15px 0; font-size: 14px; line-height: 1.5;">
+                        Questions about your post, analytics, or growing your audience? We're here to help you succeed.
+                    </p>
+                    <a href="mailto:dtspecial330660@gmail.com" style="color: #10b981; text-decoration: none; font-weight: 500; font-size: 14px;">
+                        📧 Contact Our Team
+                    </a>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <p style="color: #4b5563; margin: 0; font-size: 16px;">
+                        Keep creating amazing content!<br/>
+                        <strong style="color: #10b981; font-size: 20px;">The AK Blog Team</strong>
+                    </p>
+                </div>
+                
+                <!-- Social Links -->
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0 0 10px 0;">
+                        Follow us for writing tips, feature updates, and community highlights
+                    </p>
+                    <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                        This is an automated notification. You can manage your email preferences in your account settings.
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Bottom Spacer -->
+        <div style="height: 40px;"></div>
+        
+    </div>
+    
+</body>
+</html>`;
+};
+
+
+export const generatePostUpdatedSuccessfullyTemplate = (postUrl) => {
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Updated Successfully</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f9ff;">
+
+    <!-- Main Container -->
+    <div style="background: linear-gradient(135deg, #facc15 0%, #f59e0b 50%, #f97316 100%); padding: 40px 20px; min-height: 100vh;">
+        
+        <!-- Email Container -->
+        <div style="max-width: 650px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); overflow: hidden;">
+            
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); padding: 40px; text-align: center; position: relative;">
+                <!-- Success Icon -->
+                <div style="background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3);">
+                    <span style="font-size: 40px;">✏️</span>
+                </div>
+                <h1 style="color: white; margin: 0 0 10px 0; font-size: 32px; font-weight: 700; letter-spacing: -0.5px;">
+                    Post Updated Successfully!
+                </h1>
+                <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 18px; font-weight: 400;">
+                    Your post has been updated and is now live
+                </p>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 50px 40px;">
+                
+                <!-- Congratulations Message -->
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h2 style="color: #1f2937; margin: 0 0 15px 0; font-size: 26px; font-weight: 600;">
+                        🚀 Nice Update!
+                    </h2>
+                    <p style="color: #6b7280; font-size: 16px; line-height: 1.6; margin: 0;">
+                        Your post has been successfully updated on AK Blog. 
+                        It's ready to engage and inform your readers.
+                    </p>
+                </div>
+                
+                <!-- Post Details Card -->
+                <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 20px; padding: 30px; margin: 30px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.06);">
+                    <h3 style="color: #b45309; margin: 0 0 20px 0; font-size: 20px; font-weight: 600; display: flex; align-items: center;">
+                        📝 Your Updated Post
+                    </h3>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-left: 5px solid #f59e0b;">
+                        <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 600; line-height: 1.4;">
+                            "Your Updated Post"
+                        </h4>
+                        <p style="color: #6b7280; margin: 0 0 20px 0; font-size: 14px;">
+                            Updated successfully • Just now
+                        </p>
+                        
+                        <!-- Call-to-Action Button -->
+                        <div style="text-align: center; margin-top: 25px;">
+                            <a href="${postUrl}" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 600; font-size: 18px; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3); transition: all 0.3s ease; letter-spacing: 0.5px;">
+                                🔗 View Your Post
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- What's Next Section -->
+                <div style="background: #fff7ed; border: 2px solid #fed7aa; border-radius: 16px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #c2410c; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
+                        🎯 What's Next?
+                    </h3>
+                    <ul style="color: #9a3412; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7;">
+                        <li><strong>Share your updated post:</strong> Spread the word on social media platforms</li>
+                        <li><strong>Engage with readers:</strong> Respond to comments and build connections</li>
+                        <li><strong>Track performance:</strong> Monitor views and engagement metrics</li>
+                        <li><strong>Keep writing:</strong> Plan your next amazing piece of content</li>
+                        <li><strong>Build your audience:</strong> Promote across your networks</li>
+                    </ul>
+                </div>
+                
+            </div>
+            
+            <!-- Footer -->
+            <div style="background: #f9fafb; padding: 40px; text-align: center; border-top: 1px solid #e5e7eb;">
+                <p style="color: #4b5563; font-size: 16px; margin: 0;">
+                    Keep creating amazing content!<br/>
+                    <strong style="color: #f59e0b; font-size: 20px;">The AK Blog Team</strong>
+                </p>
+            </div>
+            
+        </div>
+        
+        <!-- Bottom Spacer -->
+        <div style="height: 40px;"></div>
+        
+    </div>
+    
+</body>
+</html>
+`;
+};

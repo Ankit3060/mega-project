@@ -5,12 +5,11 @@ import {
     loginUser, 
     resendOtp,
     logoutUser,
-    updateUserDetails,
-    updatePassword,
     forgetPassword,
     resetPassword,
-    refreshAccessToken
-} from '../Controller/userController.js';
+    refreshAccessToken,
+} from '../Controller/auth.controller.js';
+import { isAuthenticated } from '../Middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -18,9 +17,7 @@ router.post('/register', registerUser);
 router.post('/verify-otp', verifyOtp);
 router.post('/resend-otp', resendOtp);
 router.post('/login', loginUser);
-router.post('/logout', logoutUser);
-router.put('/update-details/:userId', updateUserDetails);
-router.put('/update-password/:userId', updatePassword);
+router.post('/logout',isAuthenticated, logoutUser);
 router.post('/forget-password', forgetPassword);
 router.put('/reset-password/:token', resetPassword);
 router.post('/refresh-token',refreshAccessToken);

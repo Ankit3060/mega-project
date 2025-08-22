@@ -2,7 +2,9 @@ import express,{urlencoded} from "express";
 import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import cors from "cors";
-import userRouter from "./Routes/userRoutes.js";
+import authRouter from "./Routes/auth.routes.js";
+import userRouter from "./Routes/user.routes.js";
+import blogRouter from "./Routes/blog.routes.js"
 import expressFileupload from "express-fileupload";
 import {removeUnverifiedAccounts} from "./Service/removeUnverifiedAccount.js";
 import {removeUnverifiedOtp} from "./Service/removeUnverifiedOtp.js";
@@ -40,7 +42,9 @@ app.use(express.json());
 app.use(urlencoded({extended: true}));
 
 
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/blog", blogRouter);
 
 
 removeUnverifiedAccounts();
