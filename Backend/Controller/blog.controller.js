@@ -1,8 +1,9 @@
 import { Blog } from "../Models/blogModel.js";
 import { User } from "../Models/userModel.js";
+import { Comment } from "../Models/commentModel.js";
 import { v2 as cloudinary } from "cloudinary";
-import {sendSuccessfulPostMail} from "../Utils/sendSuccessfullpost.js"
-import {sendSuccessfulPostUpdateMail} from "../Utils/senSuccessfullPostUpdate.js"
+import { sendSuccessfulPostMail } from "../Utils/sendSuccessfullpost.js"
+import { sendSuccessfulPostUpdateMail } from "../Utils/senSuccessfullPostUpdate.js"
 
 export const createNewBlog = async (req, res) => {
     try {
@@ -163,7 +164,7 @@ export const updateBlog = async (req, res) => {
         if (content) blog.content = content;
         blog.isPublished = true,
 
-        await blog.save();
+            await blog.save();
 
         const postUrl = `${process.env.FRONTEND_URL}/blog/my-blog`;
         sendSuccessfulPostUpdateMail(postUrl, req.user.email);
@@ -217,14 +218,71 @@ export const deleteBlog = async (req, res) => {
             await cloudinary.uploader.destroy(blog.blogImage.public_id);
         }
 
-
         await Blog.findByIdAndDelete(blogId);
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found",
+            });
+        }
+        await Comment.deleteMany({blogId});
 
         return res.status(200).json({
             statusCode: 200,
             success: true,
-            message: "Successfully deleted the blog"
+            message: "Blog and its comments deleted successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message: "Error in deleting blog",
+            error: error.message,
         })
+    }
+}
+
+
+export const deleteBlogByAdmin = async (req, res) => {
+    try {
+        const { blogId } = req.params;
+        if (!blogId) {
+            return res.status(400).json({
+                statusCode: 400,
+                success: false,
+                message: "Blog id is required"
+            })
+        }
+
+        const blog = await Blog.findById(blogId);
+        if (!blog) {
+            return res.status(404).json({
+                statusCode: 404,
+                success: false,
+                message: "Blog not found",
+            });
+        }
+
+
+        if (blog.blogImage?.public_id) {
+            await cloudinary.uploader.destroy(blog.blogImage.public_id);
+        }
+
+
+        await Blog.findByIdAndDelete(blogId);
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found",
+            });
+        }
+        await Comment.deleteMany({blogId});
+
+        return res.status(200).json({
+            statusCode: 200,
+            success: true,
+            message: "Blog and its comments deleted successfully",
+        });
     } catch (error) {
         return res.status(500).json({
             statusCode: 500,
@@ -301,10 +359,11 @@ export const getParticularUserBlog = async (req, res) => {
         const blogsOfUser = await Blog.find({ owner: userId });
 
         if (blogsOfUser.length === 0) {
-            return res.status(400).json({
-                statusCode: 400,
-                success: false,
+            return res.status(200).json({
+                statusCode: 200,
+                success: true,
                 message: "No blogs found with this user",
+                blogsOfUser: []
             });
         }
 

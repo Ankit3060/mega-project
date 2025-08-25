@@ -4,7 +4,10 @@ import { config } from "dotenv";
 import cors from "cors";
 import authRouter from "./Routes/auth.routes.js";
 import userRouter from "./Routes/user.routes.js";
-import blogRouter from "./Routes/blog.routes.js"
+import blogRouter from "./Routes/blog.routes.js";
+import likeRouter from "./Routes/like.routes.js";
+import commentRouter from "./Routes/comment.routes.js";
+import subscribeRouter from "./Routes/subscribe.routes.js";
 import expressFileupload from "express-fileupload";
 import {removeUnverifiedAccounts} from "./Service/removeUnverifiedAccount.js";
 import {removeUnverifiedOtp} from "./Service/removeUnverifiedOtp.js";
@@ -45,6 +48,9 @@ app.use(urlencoded({extended: true}));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/blog", blogRouter);
+app.use("/api/v1/like", likeRouter);
+app.use("/api/v1/comment", commentRouter);
+app.use("/api/v1/subscribe", subscribeRouter);
 
 
 removeUnverifiedAccounts();

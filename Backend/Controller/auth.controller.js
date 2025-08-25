@@ -132,6 +132,133 @@ export const registerUser = async (req, res) => {
 };
 
 
+export const registerAdmin = async (req, res) => {
+  try {
+    const { fullName, email, userName, password, phone } = req.body;
+
+    if (!fullName || !email || !userName || !password || !phone) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    
+    const isUserExists = await User.findOne({
+      $or: [{ email }, { userName }, { phone }],
+    });
+    if (isUserExists) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "User already exists with this email, username, or phone",
+      });
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Please provide a valid email address",
+      });
+    }
+
+    const usernameRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_.-]+$/;
+    if (!usernameRegex.test(userName)) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message:
+          "Username can only contain letters, numbers, underscores, and hyphens",
+      });
+    }
+
+    const phoneRegex = /^(?!(\d)\1{9})[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message:
+          "Phone number must be 10 digits long, start with 6-9, and cannot be all the same digit",
+      });
+    }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#_.-])[A-Za-z\d@$!%*?&^#_.-]{6,20}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message:
+          "Password must include uppercase, lowercase, number, special character and be 6–20 characters long",
+      });
+    }
+
+    let avatarData = {
+      public_id: null,
+      url: `https://api.dicebear.com/5.x/initials/svg?seed=${encodeURIComponent(
+        fullName
+      )}&background=%23ebf4ff&color=%230f4c75&radius=50&fontSize=50`,
+    };
+
+    if (req.files && req.files.avatar) {
+      const { avatar } = req.files;
+      const allowedFormat = [
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/jpg",
+        "image/svg+xml",
+      ];
+      if (!allowedFormat.includes(avatar.mimetype)) {
+        return res.status(400).json({
+          statusCode: 400,
+          success: false,
+          message: "Invalid image format",
+        });
+      }
+
+      const cloudinaryResponse = await cloudinary.uploader.upload(
+        avatar.tempFilePath,
+        { folder: "Mega_Project/Admins" }
+      );
+
+      avatarData = {
+        public_id: cloudinaryResponse.public_id,
+        url: cloudinaryResponse.secure_url,
+      };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const admin = await User.create({
+      fullName,
+      email,
+      userName,
+      password: hashedPassword,
+      phone,
+      avatar: avatarData,
+      role: "Admin",
+    });
+
+    const verificationCode = await admin.generateVerificationCode();
+
+    await admin.save();
+
+    sendVerificationCode(verificationCode, email, res);
+  } catch (error) {
+    return res.status(500).json({
+      statusCode: 500,
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
   if (!email || !otp) {
