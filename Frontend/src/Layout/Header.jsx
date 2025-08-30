@@ -1,82 +1,280 @@
-import React from "react";
-import { Bell } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { NavLink } from "react-router-dom";
+import { Bell, X, Menu, Sun, Moon } from "lucide-react";
+import { IoMdHome } from "react-icons/io";
+import { MdExplore } from "react-icons/md";
+import { FaPenFancy } from "react-icons/fa";
+import { FaCircleInfo } from "react-icons/fa6";
+import { IoSearchSharp } from "react-icons/io5";
 
 function Header() {
-  return (
-    <header className="bg-[#0f172a] text-white px-6 py-3 flex items-center justify-between">
-      {/* Left: Logo + Nav */}
-      <div className="flex items-center space-x-8">
-        {/* Logo */}
-        <img src="./public/logo.png" alt="Logo" className="h-6" />
+  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
-        {/* Nav */}
-        <nav>
-          <ul className="flex space-x-6">
+  const avatarRef = useRef(null);
+  const notifRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (avatarRef.current && !avatarRef.current.contains(e.target)) {
+        setIsAvatarOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setIsNotifOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    function handleEscape(e) {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+    }
+    if (searchOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [searchOpen]);
+
+  return (
+    <>
+      <header className="sticky top-0 left-0 w-full z-50 bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white px-4 sm:px-6 py-4 flex items-center justify-between shadow-lg">
+        <div className="flex items-center space-x-3">
+          <button
+            className="sm:hidden p-2 rounded-md hover:bg-white/10 transition-all duration-300"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+
+          <div className="flex items-center space-x-3 cursor-pointer">
+            <img src="./public/logo.png" alt="Logo" className="h-9 w-auto" />
+            <div className="flex flex-col">
+              <span className="hidden sm:block text-xl font-bold tracking-wide">AK Blog</span>
+              <span className="hidden md:inline text-xs text-gray-400">
+                A Social Media for Sharing Stories
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:block">
+          <ul className="flex space-x-8">
             <li>
-              <a
-                href="/"
-                className="text-sm font-medium text-indigo-400 border-b-2 border-indigo-400 pb-1"
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `text-sm font-medium ${
+                    isActive
+                      ? "text-indigo-400 border-b-2 border-indigo-400 pb-1"
+                      : "text-gray-300 hover:text-indigo-300"
+                  } transition`
+                }
               >
-                Dashboard
-              </a>
+                <IoMdHome className="inline-block mr-1 text-xl mb-1" /> Home
+              </NavLink>
             </li>
             <li>
-              <a href="/team" className="text-sm font-medium hover:text-gray-300">
-                Team
-              </a>
+              <NavLink
+                to="/explore"
+                className={({ isActive }) =>
+                  `text-sm font-medium ${
+                    isActive
+                      ? "text-indigo-400 border-b-2 border-indigo-400 pb-1"
+                      : "text-gray-300 hover:text-indigo-300"
+                  } transition`
+                }
+              >
+                <MdExplore className="inline-block mr-1 text-xl mb-1" /> Explore
+              </NavLink>
             </li>
             <li>
-              <a href="/projects" className="text-sm font-medium hover:text-gray-300">
-                Projects
-              </a>
-            </li>
-            <li>
-              <a href="/calendar" className="text-sm font-medium hover:text-gray-300">
-                Calendar
-              </a>
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `text-sm font-medium ${
+                    isActive
+                      ? "text-indigo-400 border-b-2 border-indigo-400 pb-1"
+                      : "text-gray-300 hover:text-indigo-300"
+                  } transition`
+                }
+              >
+                <FaCircleInfo className="inline-block mr-1 text-xl mb-1" /> About Us
+              </NavLink>
             </li>
           </ul>
         </nav>
-      </div>
 
-      {/* Right: Search + Icons */}
-      <div className="flex items-center space-x-4">
-        {/* Search Bar */}
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-[#1e293b] text-sm text-gray-300 placeholder-gray-400 rounded-md pl-9 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          />
-          <svg
-            className="w-4 h-4 text-gray-400 absolute left-3 top-2.5"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1116.65 16.65z"
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <div className="relative hidden sm:block">
+            <input
+              type="text"
+              placeholder="Search posts, users..."
+              className="bg-white/10 backdrop-blur-md text-sm text-gray-200 placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
-          </svg>
+            <IoSearchSharp className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+          </div>
+
+          <NavLink
+            to="/create"
+            className="flex items-center gap-1 text-sm font-medium bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded-lg transition"
+          >
+            <FaPenFancy className="text-lg" />
+            <span className="hidden sm:inline">Write</span>
+          </NavLink>
+
+
+          <button className="p-2 rounded-full hover:bg-white/10 transition">
+            <Sun className="w-5 h-5 text-yellow-400" />
+          </button>
+
+          <div className="relative" ref={notifRef}>
+            <button
+              onClick={() => setIsNotifOpen(!isNotifOpen)}
+              className="relative p-2 rounded-full hover:text-indigo-300 cursor-pointer transition"
+            >
+              <Bell className="w-5 h-5" />
+            </button>
+
+            {isNotifOpen && (
+              <div className="absolute right-0 mt-3 w-64 bg-[#1e293b] border border-gray-700 rounded-lg shadow-lg py-3 px-4 text-sm text-gray-300 z-50">
+                <p className="text-center">🔔 No new notifications</p>
+              </div>
+            )}
+          </div>
+          
+          <button
+            className="sm:hidden p-2 rounded-full hover:bg-white/10 transition"
+            onClick={() => setSearchOpen(true)}
+          >
+            <IoSearchSharp className="w-5 h-5" />
+          </button>
+
+
+          <div className="relative" ref={avatarRef}>
+            <div
+              className="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition"
+              onClick={() => setIsAvatarOpen(!isAvatarOpen)}
+            >
+              <img
+                src="/avatar.jpg"
+                alt="User Avatar"
+                className="w-9 h-9 rounded-full border-2 border-indigo-500 shadow-md"
+              />
+              <span className="hidden md:inline text-sm font-medium">Ankit</span>
+            </div>
+
+            {isAvatarOpen && (
+              <div className="absolute right-0 mt-3 w-44 bg-[#1e293b] border border-gray-700 rounded-lg shadow-lg py-2 z-50">
+                <NavLink
+                  to="/profile"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-indigo-500/20 hover:text-indigo-300 transition"
+                >
+                  Profile
+                </NavLink>
+                <NavLink
+                  to="/change-password"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-indigo-500/20 hover:text-indigo-300 transition"
+                >
+                  Change Password
+                </NavLink>
+                <button
+                  onClick={() => alert("Signing out...")}
+                  className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 transition"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Notification Bell */}
-        <button className="p-2 rounded-full hover:bg-[#1e293b]">
-          <Bell className="w-5 h-5" />
-        </button>
+        {/* Mobile Nav Drawer */}
+        {menuOpen && (
+          <div className="absolute top-full left-0 w-full bg-[#1e293b] border-t border-gray-700 shadow-lg sm:hidden z-50">
+            <ul className="flex flex-col p-4 space-y-3">
+              <li>
+                <NavLink
+                  to="/"
+                  className="flex items-center gap-2 text-gray-200 hover:text-indigo-300 transition"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <IoMdHome className="text-xl" /> Home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/explore"
+                  className="flex items-center gap-2 text-gray-200 hover:text-indigo-300 transition"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <MdExplore className="text-xl" /> Explore
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/about"
+                  className="flex items-center gap-2 text-gray-200 hover:text-indigo-300 transition"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaCircleInfo className="text-xl" /> About Us
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+        )}
+      </header>
 
-        {/* Avatar */}
-        <img
-          src="/avatar.jpg"
-          alt="User Avatar"
-          className="w-8 h-8 rounded-full border border-gray-600"
-        />
-      </div>
-    </header>
+      {/* Full-Screen Mobile Search Overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-[100] sm:hidden">
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setSearchOpen(false)}
+          />
+          
+          <div className="relative bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white p-4 shadow-lg">
+            <div className="flex items-center space-x-3">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="Search posts, users..."
+                  className="w-full bg-white/10 backdrop-blur-md text-gray-200 placeholder-gray-400 rounded-lg pl-10 pr-4 py-3 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  autoFocus
+                />
+                <IoSearchSharp className="w-5 h-5 text-gray-400 absolute left-3 top-3.5" />
+              </div>
+              
+              <button
+                onClick={() => setSearchOpen(false)}
+                className="p-2 rounded-full hover:bg-white/10 transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="relative bg-[#1e293b]/95 h-full p-4 overflow-y-auto">
+            <div className="text-center text-gray-400 mt-8">
+              <p>Start typing to search...</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
