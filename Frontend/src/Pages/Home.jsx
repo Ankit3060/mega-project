@@ -1,5 +1,5 @@
 import React from "react";
-
+import { SlUserFollow } from "react-icons/sl";
 
 
 function Home() {
@@ -10,156 +10,162 @@ function Home() {
         {/* Example Blog Card */}
         <div className="space-y-6">
           <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
+            {/* here we will take the image */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-300 rounded-full text-center">🧑‍🚀</div>
+              <div className="flex flex-col">
+                <p>Ankit Kumar</p>
+                <div className="flex gap-2 text-gray-500 text-sm">
+                  <p>@ankit</p>
+                  <span>•</span>
+                  <p>3 hrs ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-bold">Blog Title</h2>
+                <p className="text-gray-600 text-sm">
+                  Short blog description goes here...
+                </p>
+              </div>
+              <button className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg ml-4">
+                Read Full Article
+              </button>
+            </div>
           </div>
           <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
+            {/* here we will take the image */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-300 rounded-full text-center">🧑‍🚀</div>
+              <div className="flex flex-col">
+                <p>Ankit Kumar</p>
+                <div className="flex gap-2 text-gray-500 text-sm">
+                  <p>@ankit</p>
+                  <span>•</span>
+                  <p>3 hrs ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-bold">Blog Title</h2>
+                <p className="text-gray-600 text-sm">
+                  Short blog description goes here...
+                </p>
+              </div>
+              <button className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg ml-4">
+                Read Full Article
+              </button>
+            </div>
           </div>
           <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
+            {/* here we will take the image */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-300 rounded-full text-center">🧑‍🚀</div>
+              <div className="flex flex-col">
+                <p>Ankit Kumar</p>
+                <div className="flex gap-2 text-gray-500 text-sm">
+                  <p>@ankit</p>
+                  <span>•</span>
+                  <p>3 hrs ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-bold">Blog Title</h2>
+                <p className="text-gray-600 text-sm">
+                  Short blog description goes here...
+                </p>
+              </div>
+              <button className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg ml-4">
+                Read Full Article
+              </button>
+            </div>
           </div>
           <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
+            {/* here we will take the image */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-300 rounded-full text-center">🧑‍🚀</div>
+              <div className="flex flex-col">
+                <p>Ankit Kumar</p>
+                <div className="flex gap-2 text-gray-500 text-sm">
+                  <p>@ankit</p>
+                  <span>•</span>
+                  <p>3 hrs ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-bold">Blog Title</h2>
+                <p className="text-gray-600 text-sm">
+                  Short blog description goes here...
+                </p>
+              </div>
+              <button className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg ml-4">
+                Read Full Article
+              </button>
+            </div>
           </div>
           <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
+            {/* here we will take the image */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-300 rounded-full text-center">🧑‍🚀</div>
+              <div className="flex flex-col">
+                <p>Ankit Kumar</p>
+                <div className="flex gap-2 text-gray-500 text-sm">
+                  <p>@ankit</p>
+                  <span>•</span>
+                  <p>3 hrs ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-bold">Blog Title</h2>
+                <p className="text-gray-600 text-sm">
+                  Short blog description goes here...
+                </p>
+              </div>
+              <button className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg ml-4">
+                Read Full Article
+              </button>
+            </div>
           </div>
           <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
-          </div>
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title</h2>
-            <p className="text-gray-600 text-sm">
-              Short blog description goes here...
-            </p>
+            {/* here we will take the image */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-300 rounded-full text-center">🧑‍🚀</div>
+              <div className="flex flex-col">
+                <p>Ankit Kumar</p>
+                <div className="flex gap-2 text-gray-500 text-sm">
+                  <p>@ankit</p>
+                  <span>•</span>
+                  <p>3 hrs ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-bold">Blog Title</h2>
+                <p className="text-gray-600 text-sm">
+                  Short blog description goes here...
+                </p>
+              </div>
+              <button className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg ml-4">
+                Read Full Article
+              </button>
+            </div>
           </div>
 
-          <div className="border rounded-xl p-4 shadow-sm">
-            <h2 className="text-xl font-bold">Blog Title 2</h2>
-            <p className="text-gray-600 text-sm">
-              Another blog description goes here...
-            </p>
-          </div>
         </div>
       </div>
 
@@ -171,31 +177,31 @@ function Home() {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
             <div>
-              <p className="font-medium">Author Name</p>
-              <p className="text-sm text-gray-500">Tech Blogger</p>
+              <p className="font-medium">Ankit Kumar</p>
+              <p className="text-sm text-gray-500">@ankit</p>
             </div>
           </div>
         </div>
 
         {/* People You May Follow */}
         <div className="border rounded-xl p-4 mb-6 shadow-sm">
-          <h3 className="font-semibold mb-3">👥 People You May Follow</h3>
+          <h3 className="font-semibold mb-3 flex gap-3 "><SlUserFollow  className="text-lg"/> People You May Follow</h3>
           <ul className="space-y-3">
             <li className="flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-                <span className="text-sm">User One</span>
+                <span className="text-sm">Ankit Kumar</span>
               </div>
-              <button className="text-xs px-3 py-1 rounded-full bg-blue-500 text-white">
+              <button className="text-xs px-3 py-1 rounded-full bg-blue-500 hover:bg-blue-600 cursor-pointer text-white">
                 Follow
               </button>
             </li>
             <li className="flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-                <span className="text-sm">User Two</span>
+                <span className="text-sm">Ankit Kumar</span>
               </div>
-              <button className="text-xs px-3 py-1 rounded-full bg-blue-500 text-white">
+              <button className="text-xs px-3 py-1 rounded-full bg-blue-500 hover:bg-blue-600 cursor-pointer text-white">
                 Follow
               </button>
             </li>

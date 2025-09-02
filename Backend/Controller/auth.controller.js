@@ -9,9 +9,9 @@ import jwt from "jsonwebtoken"
 
 export const registerUser = async (req, res) => {
   try {
-    const { fullName, email, userName, password, phone } = req.body;
+    const { fullName, email, userName, password, confirmPassword, phone } = req.body;
 
-    if (!fullName || !email || !userName || !password || !phone) {
+    if (!fullName || !email || !userName || !password || !confirmPassword || !phone) {
       return res.status(400).json({
         statusCode: 400,
         success: false,
@@ -45,7 +45,7 @@ export const registerUser = async (req, res) => {
         statusCode: 400,
         success: false,
         message:
-          "Username can only contain letters, numbers, underscores, and hyphens",
+          "Username should contain letters, numbers (underscores and hyphens can be used)",
       });
     }
 
@@ -59,13 +59,21 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#_.-])[A-Za-z\d@$!%*?&^#_.-]{6,20}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#_.-])[A-Za-z\d@$!%*?&^#_.-]{8,20}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         statusCode: 400,
         success: false,
         message:
-          "Password must include uppercase, lowercase, number, special character and be 6–20 characters long",
+          "Password must include uppercase, lowercase, number, special character and be 8–20 characters long",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Passwords do not match",
       });
     }
 
@@ -134,9 +142,9 @@ export const registerUser = async (req, res) => {
 
 export const registerAdmin = async (req, res) => {
   try {
-    const { fullName, email, userName, password, phone } = req.body;
+    const { fullName, email, userName, password, confirmNewPassword, phone } = req.body;
 
-    if (!fullName || !email || !userName || !password || !phone) {
+    if (!fullName || !email || !userName || !password || !confirmNewPassword || !phone) {
       return res.status(400).json({
         statusCode: 400,
         success: false,
@@ -171,7 +179,7 @@ export const registerAdmin = async (req, res) => {
         statusCode: 400,
         success: false,
         message:
-          "Username can only contain letters, numbers, underscores, and hyphens",
+          "Username should contain letters, numbers (underscores and hyphens can be used)",
       });
     }
 
@@ -186,13 +194,22 @@ export const registerAdmin = async (req, res) => {
     }
 
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#_.-])[A-Za-z\d@$!%*?&^#_.-]{6,20}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#_.-])[A-Za-z\d@$!%*?&^#_.-]{8,20}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         statusCode: 400,
         success: false,
         message:
-          "Password must include uppercase, lowercase, number, special character and be 6–20 characters long",
+          "Password must include uppercase, lowercase, number, special character and be 8–20 characters long",
+      });
+    }
+
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Passwords do not match",
       });
     }
 
@@ -257,7 +274,7 @@ export const registerAdmin = async (req, res) => {
     });
   }
 };
-
+  
 
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
@@ -483,7 +500,7 @@ export const forgetPassword = async (req, res) => {
     user.lastResetTokenTime = Date.now();
     await user.save();
 
-    const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     sendPasswordResetCode(resetPasswordUrl, email, res);
   } catch (error) {
