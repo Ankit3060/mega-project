@@ -16,7 +16,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const { isAuthenticated, setIsAuthenticated, setUser, accessToken, setAccessToken } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, user, setUser, accessToken, setAccessToken } = useAuth();
 
   const navigateTo = useNavigate();
 
@@ -226,28 +226,28 @@ function Header() {
                   onClick={() => setIsAvatarOpen(!isAvatarOpen)}
                 >
                   <img
-                    src="/avatar.jpg"
+                    src={user.avatar.url}
                     alt="User Avatar"
                     className="w-9 h-9 rounded-full border-2 border-indigo-500 shadow-md"
                   />
                   <span className="hidden md:inline text-sm font-medium">
-                    Ankit
+                    {user.fullName.split(" ")[0]}
                   </span>
                 </div>
 
                 {isAvatarOpen && (
                   <div className="absolute right-0 mt-3 w-44 bg-[#1e293b] border border-gray-700 rounded-lg shadow-lg py-2 z-50">
                     <NavLink
-                      to="/profile"
+                      to="/user/profile"
                       className="block px-4 py-2 text-sm text-gray-200 hover:bg-indigo-500/20 hover:text-indigo-300 transition"
                     >
                       Profile
                     </NavLink>
                     <NavLink
-                      to="/change-password"
+                      to="/user/update/profile"
                       className="block px-4 py-2 text-sm text-gray-200 hover:bg-indigo-500/20 hover:text-indigo-300 transition"
                     >
-                      Change Password
+                      Update Profile
                     </NavLink>
                     <button
                       onClick={handleLogout}

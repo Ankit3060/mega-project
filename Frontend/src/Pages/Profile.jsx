@@ -1,50 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../Context/authContext";
 import axios from "axios";
+import blogImages from "../assets/blogImage.png";
+import bannerImage from "../assets/bannerImage.png";
 
 function Profile() {
-  const { user, setAccessToken, accessToken } = useAuth();
+  const { user, accessToken } = useAuth();
+  const [userBlog, setUserBlog] = useState([]);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+
+  const id = user?._id;
+  console.log(id)
+
+  useEffect(() => {
+    const fetchUserBlog = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/v1/blog/my-blog",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setUserBlog(response.data.blogs);
+      } catch (error) {
+        console.error("Error fetching user blog:", error);
+      }
+    };
+
+    const fetchFollower = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/subscribe/follower/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setFollowers(response.data.subscriberCount);
+      } catch (error) {
+        console.error("Error fetching followers:", error);
+      }
+    };
+
+    const fetchFollowing = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/subscribe/following/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setFollowing(response.data.followingCount);
+      } catch (error) {
+        console.error("Error fetching following:", error);
+      }
+    };
+
+    fetchUserBlog();
+    fetchFollower();
+    fetchFollowing();
+  }, [accessToken]);
 
   const userData = {
     fullName: user?.fullName,
     username: "@" + user?.userName,
     profileImage: user?.avatar.url,
-    backgroundImage:"https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&h=300&fit=crop",
-    followers: "2.5K",
-    following: "150",
-    blogs: [
-      {
-        id: 1,
-        title: "Getting Started with React Hooks",
-        excerpt:
-          "Learn the fundamentals of React Hooks and how they can simplify your component logic...",
-        date: "2 days ago",
-        readTime: "5 min read",
-        image:
-          "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=300&h=200&fit=crop",
-      },
-      {
-        id: 2,
-        title: "Building Responsive Web Applications",
-        excerpt:
-          "Master the art of creating web applications that work seamlessly across all devices...",
-        date: "1 week ago",
-        readTime: "8 min read",
-        image:
-          "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=300&h=200&fit=crop",
-      },
-      {
-        id: 3,
-        title: "Understanding Modern JavaScript",
-        excerpt:
-          "Dive deep into ES6+ features and learn how to write cleaner, more efficient JavaScript code...",
-        date: "2 weeks ago",
-        readTime: "12 min read",
-        image:
-          "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=300&h=200&fit=crop",
-      },
-    ],
+    backgroundImage: user?.coverImage?.url,
+    followers: followers,
+    following: following,
+    blogs: userBlog || [],
   };
+
+  console.log(userData);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -52,10 +85,12 @@ function Profile() {
       <div className="relative">
         {/* Background Image */}
         <div
-          className="h-48 md:h-64 bg-cover bg-center bg-gray-300"
-          style={{ backgroundImage: `url(${userData.backgroundImage})` }}
+          className="h-48 md:h-64 bg-cover bg-center  "
+          style={{ backgroundImage: userData.backgroundImage
+      ? `url("${userData.backgroundImage}")`
+      : `url("https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1470&q=80")`,}}
         >
-          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+          <div className="absolute inset-0 bg-opacity-30"></div>
         </div>
 
         {/* Profile Info Overlay */}
@@ -122,8 +157,8 @@ function Profile() {
               {/* Blog Image */}
               <div className="h-48 overflow-hidden">
                 <img
-                  src={blog.image}
-                  alt={blog.title}
+                  src={blog.blogImage?.url || blogImages}
+                  alt={" image"}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
@@ -134,24 +169,26 @@ function Profile() {
                   {blog.title}
                 </h3>
                 <p className="text-gray-600 mb-4 line-clamp-3">
-                  {blog.excerpt}
+                  {blog.content}
                 </p>
 
                 {/* Blog Meta */}
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{blog.date}</span>
-                  <span>{blog.readTime}</span>
+                  <span>
+                    {new Date(blog.createdAt).toLocaleDateString("en-IN")}
+                  </span>
+                  <span>{blog.readTime || "4 Min read"}</span>
                 </div>
+
+                <button
+                  className="w-full mt-3 py-2 px-4 bg-blue-700 text-white font-medium rounded-lg hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+                  onClick={() => console.log("Read blog:", blog._id)} // replace with navigate or modal later
+                >
+                  Read
+                </button>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Load More Button */}
-        <div className="text-center mt-8">
-          <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">
-            Load More Blogs
-          </button>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import ForgotPassword from './Components/ForgetPassword.jsx';
 import VerifyOtp from './Components/verifyOtp.jsx';
 import ResetPassword from './Components/resetPassword.jsx';
 import Profile from './Pages/Profile.jsx';
+import UpdateProfile from './Pages/UpdateProfile.jsx';
 
 function App() {
   return (
@@ -23,7 +24,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path='/reset-password/:token' element={<ResetPassword />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/update/profile" element={<UpdateProfile />} />
         </Route>
       </Routes>
     </Router>

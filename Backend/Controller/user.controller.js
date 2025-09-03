@@ -126,7 +126,7 @@ export const updateUserDetails = async (req, res) => {
       }
 
       const cloudinaryResponse = await cloudinary.uploader.upload(
-        coverImage.tempFilePath,
+        coverImage.tempFilePath || coverImage.tempFilePath,
         {
           folder: "Mega_Project",
         }
