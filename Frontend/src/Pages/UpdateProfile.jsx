@@ -1,30 +1,12 @@
 import React, { useState } from "react";
-import {
-  Edit3,
-  Camera,
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  Shield,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import {Edit3,Camera,User,Mail,Phone,Calendar,Shield,Eye,EyeOff} from "lucide-react";
 import { useAuth } from "../Context/authContext";
-import { set } from "mongoose";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useEffect } from "react";
 
 function UpdateProfile() {
-  const {
-    user,
-    setUser,
-    isAuthenticated,
-    setIsAuthenticated,
-    accessToken,
-    setAccessToken,
-  } = useAuth();
+  const {user,setUser,accessToken,} = useAuth();
 
   const id = user?._id;
 
@@ -40,6 +22,7 @@ function UpdateProfile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
   useEffect(()=>{
     setFullName(user?.fullName);
     setUserName(user?.userName);
@@ -64,6 +47,7 @@ function UpdateProfile() {
   };
 
   const handleSaveProfile = async () => {
+    const loadingToast = toast.loading("Updating profile...");
     try {
       const updateUserData = await axios.put(
         `http://localhost:4000/api/v1/user/update-details/${id}`,
@@ -74,9 +58,11 @@ function UpdateProfile() {
           },
         }
       );
+      toast.dismiss(loadingToast);
       toast.success("Profile updated successfully!");
       setUser(updateUserData.data.user);
     } catch (error) {
+      toast.dismiss(loadingToast);
       toast.error(error.response.data.message || "Failed to update profile.");
     }
   };
@@ -106,12 +92,7 @@ function UpdateProfile() {
               },
             }
           );
-
-          // Dismiss loading toast
           toast.dismiss(loadingToast);
-
-          console.log("Upload response:", response.data); // Debug log
-
           toast.success(
             `${type === "cover" ? "Cover image" : "Profile image"} updated successfully!`
           );
@@ -141,10 +122,7 @@ function UpdateProfile() {
           }
 
         } catch (error) {
-          // Dismiss loading toast
           toast.dismiss(loadingToast);
-          
-          console.error("Upload error:", error.response?.data); // Debug log
           toast.error(error.response?.data?.message || "Failed to upload image.");
         }
       }
@@ -193,6 +171,8 @@ function UpdateProfile() {
       return;
     }
 
+    const loadingToast = toast.loading("Updating password...");
+
     try {
       const response = await axios.put(
         `http://localhost:4000/api/v1/user/update-password/${id}`,
@@ -201,11 +181,13 @@ function UpdateProfile() {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
+      toast.dismiss(loadingToast);
       toast.success(response.data.message || "Password updated successfully!");
       setOldPassword("");
       setNewPassword("");
       setConfirmNewPassword("");
     } catch (error) {
+      toast.dismiss(loadingToast);
       toast.error(error.response?.data?.message || "Failed to update password");
     }
   };
@@ -284,7 +266,8 @@ function UpdateProfile() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                  <Phone className="mr-2" size={16} />
                   Phone Number
                 </label>
                 <input

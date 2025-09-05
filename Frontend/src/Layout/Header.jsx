@@ -187,7 +187,7 @@ function Header() {
               </div>
 
               <NavLink
-                to="/create"
+                to="/user/create/blog"
                 className="flex items-center gap-1 text-sm font-medium bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded-lg transition"
               >
                 <FaPenFancy className="text-lg" />

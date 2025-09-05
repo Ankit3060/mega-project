@@ -11,6 +11,8 @@ import VerifyOtp from './Components/verifyOtp.jsx';
 import ResetPassword from './Components/resetPassword.jsx';
 import Profile from './Pages/Profile.jsx';
 import UpdateProfile from './Pages/UpdateProfile.jsx';
+import CreateBlog from './Pages/CreateBlog.jsx';
+import ReadBlog from './Components/ReadBlog.jsx';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path='/reset-password/:token' element={<ResetPassword />} />
           <Route path="/user/profile" element={<Profile />} />
           <Route path="/user/update/profile" element={<UpdateProfile />} />
+          <Route path='/user/create/blog' element={<CreateBlog />} />
+          <Route path="/blog/read/:id" element={<ReadBlog />} />
         </Route>
       </Routes>
     </Router>

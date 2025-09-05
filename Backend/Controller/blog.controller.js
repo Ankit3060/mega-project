@@ -296,7 +296,9 @@ export const deleteBlogByAdmin = async (req, res) => {
 
 export const getAllBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.find().populate("owner", "userName fullName");
+        const blogs = await Blog.find()
+                                .populate("owner", "userName fullName avatar")
+                                .sort({ createdAt: -1 });
         res.status(200).json({
             statusCode: 200,
             success: true,
@@ -312,6 +314,42 @@ export const getAllBlogs = async (req, res) => {
         });
     }
 };
+
+
+export const getParticularBlog = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({
+                statusCode: 400,
+                success: false,
+                message: "Blog id is required"
+            })
+        }
+        const blog = await Blog.findById(id).populate("owner", "userName fullName avatar");
+        if (!blog) {
+            return res.status(404).json({
+                statusCode: 404,
+                success: false,
+                message: "Blog not found",
+            });
+        }
+
+        return res.status(200).json({
+            statusCode: 200,
+            success: true,
+            message: "Blog fetched successfully",
+            blog,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message: "Error fetching blog",
+            error: error.message,
+        });
+    }
+}
 
 
 export const getCurrentUserBlogs = async (req, res) => {

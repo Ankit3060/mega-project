@@ -6,7 +6,8 @@ import {
     getParticularUserBlog,
     updateBlog,
     deleteBlog,
-    deleteBlogByAdmin
+    deleteBlogByAdmin,
+    getParticularBlog
 } from "../Controller/blog.controller.js"
 
 import { isAuthenticated, isAuthorized} from '../Middlewares/authMiddleware.js';
@@ -20,6 +21,6 @@ router.get('/user-blog/:userId',isAuthenticated,getParticularUserBlog);
 router.put('/update-blog/:blogId',isAuthenticated,updateBlog);
 router.delete('/delete-blog/:blogId',isAuthenticated,deleteBlog);
 router.delete('/admin/delete-blog/:blogId',isAuthenticated, isAuthorized("Admin") ,deleteBlogByAdmin);
-
+router.get('/userBlog/:id', isAuthenticated, getParticularBlog);
 
 export default router;

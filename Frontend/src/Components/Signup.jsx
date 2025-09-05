@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Navigate, Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "../Context/authContext.jsx";
 import axios from "axios";
@@ -17,6 +18,8 @@ function Signup() {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [avatar, setAvatar] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const validatePassword = (value) => {
     const hasUpperCase = /[A-Z]/.test(value);
@@ -147,7 +150,7 @@ function Signup() {
           {/* Profile Pic */}
           <div className="sm:flex items-center sm:gap-1  sm:w-full">
             <label className="text-white whitespace-nowrap sm:w-32">
-              Profile Pic: 
+              Profile Pic:
             </label>
             <input
               type="file"
@@ -159,32 +162,40 @@ function Signup() {
 
           {/* Password */}
           <div className="w-full">
-            <input
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e) => {
-                const value = e.target.value;
-                setPassword(value);
-                if (!validatePassword(value) && value.length > 0) {
-                  setPasswordError(
-                    <>
-                      Password must contain at least one uppercase,lowercase,
-                      <br />
-                       number, and special character.
-                    </>
-                  );
-                } else {
-                  setPasswordError("");
-                }
-              }}
-              required
-              minLength={8}
-              maxLength={20}
-              className={`w-full text-white bg-white/10 border border-gray-600 rounded-lg p-3 placeholder-gray-400 focus:outline-none focus:ring-2 ${
-                passwordError ? "border-red-400" : "focus:ring-indigo-500"
-              } `}
-            />
+            <div className="relative">
+              <input
+                placeholder="Password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value);
+                  if (!validatePassword(value) && value.length > 0) {
+                    setPasswordError(
+                      <>
+                        Password must contain at least one uppercase, lowercase,
+                        <br />
+                        number, and special character.
+                      </>
+                    );
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
+                required
+                minLength={8}
+                maxLength={20}
+                className={`w-full text-white bg-white/10 border border-gray-600 rounded-lg p-3 pr-10 placeholder-gray-400 focus:outline-none focus:ring-2 ${passwordError ? "border-red-400" : "focus:ring-indigo-500"
+                  }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {passwordError && (
               <p className="text-sm text-red-400 mt-1">{passwordError}</p>
             )}
@@ -192,22 +203,28 @@ function Signup() {
 
           {/* Confirm Password */}
           <div className="w-full">
-            <input
-              placeholder="Confirm Password"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={8}
-              maxLength={20}
-              className={`w-full text-white bg-white/10 border border-gray-600 rounded-lg p-3 placeholder-gray-400 focus:outline-none focus:ring-2 ${
-                confirmPasswordError ? "border-red-400" : "focus:ring-indigo-500"
-              }`}
-            />
+            <div className="relative">
+              <input
+                placeholder="Confirm Password"
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={8}
+                maxLength={20}
+                className={`w-full text-white bg-white/10 border border-gray-600 rounded-lg p-3 pr-10 placeholder-gray-400 focus:outline-none focus:ring-2 ${confirmPasswordError ? "border-red-400" : "focus:ring-indigo-500"
+                  }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {confirmPasswordError && (
-              <p className="text-sm text-red-400 mt-1">
-                {confirmPasswordError}
-              </p>
+              <p className="text-sm text-red-400 mt-1">{confirmPasswordError}</p>
             )}
           </div>
 

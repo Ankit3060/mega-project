@@ -11,7 +11,6 @@ function Profile() {
   const [following, setFollowing] = useState([]);
 
   const id = user?._id;
-  console.log(id)
 
   useEffect(() => {
     const fetchUserBlog = async () => {
@@ -76,8 +75,6 @@ function Profile() {
     following: following,
     blogs: userBlog || [],
   };
-
-  console.log(userData);
 
   return (
     <div className="min-h-screen bg-gray-50">

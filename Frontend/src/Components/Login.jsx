@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../Context/authContext";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 function Login() {
-  const { isAuthenticated, setIsAuthenticated, setUser, setAccessToken } =
-    useAuth();
+  const { isAuthenticated, setIsAuthenticated, setUser, setAccessToken } = useAuth();
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
   const validatePassword = (e) => {
@@ -91,48 +92,53 @@ function Login() {
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="block text-gray-300 text-sm mb-2">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={(e) => {
-                const value = e.target.value;
-                setPassword(value);
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={password}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value);
 
-                if (value.length == 0) {
-                  setPasswordError("");
-                  return;
-                }
+                  if (value.length === 0) {
+                    setPasswordError("");
+                    return;
+                  }
 
-                const hasUpperCase = /[A-Z]/.test(value);
-                const hasLowerCase = /[a-z]/.test(value);
-                const hasNumber = /\d/.test(value);
-                const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+                  const hasUpperCase = /[A-Z]/.test(value);
+                  const hasLowerCase = /[a-z]/.test(value);
+                  const hasNumber = /\d/.test(value);
+                  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
 
-                if (
-                  !(hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar)
-                ) {
-                  setPasswordError(
-                    <>
-                      Password must contain at least one uppercase, lowercase,
-                      <br></br> number, and special character.
-                    </>
-                  );
-                  return;
-                } else {
-                  setPasswordError("");
-                }
-              }}
-              placeholder="Enter your password"
-              className={`w-full px-4 py-2 bg-white/10 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                passwordError ? "border-red-400" : "border-gray-600"
-              }`}
-              required
-              minLength={8}
-              maxLength={20}
-            />
+                  if (!(hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar)) {
+                    setPasswordError(
+                      <>
+                        Password must contain at least one uppercase, lowercase,
+                        <br /> number, and special character.
+                      </>
+                    );
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
+                placeholder="Enter your password"
+                className={`w-full px-4 py-2 pr-10 bg-white/10 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${passwordError ? "border-red-400" : "border-gray-600"
+                  }`}
+                required
+                minLength={8}
+                maxLength={20}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {passwordError && (
               <p className="text-sm text-red-400 mt-1">{passwordError}</p>
             )}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../Context/authContext";
@@ -10,6 +11,8 @@ function ResetPassword() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   const { setIsAuthenticated, setUser, setAccessToken } = useAuth();
   const navigateTo = useNavigate();
@@ -80,60 +83,71 @@ function ResetPassword() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* New Password */}
-          <div>
-            <input
-              type="password"
-              name="newPassword"
-              value={newPassword}
-              onChange={(e) => {
-                const value = e.target.value;
-                setNewPassword(value);
-                if (!validatePassword(value) && value.length > 0) {
-                  setPasswordError(
-                    <>
-                      Password must contain at least one uppercase, lowercase,{" "}
-                      <br />
-                      number, and special character.
-                    </>
-                  );
-                } else {
-                  setPasswordError("");
-                }
-              }}
-              placeholder="Enter new password"
-              className={`w-full px-4 py-2 bg-white/10 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${
-                passwordError ? "border-red-400" : "focus:ring-indigo-500"
-              }`}
-              required
-              minLength={8}
-              maxLength={20}
-            />
+          <div className="w-full">
+            <div className="relative">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                name="newPassword"
+                value={newPassword}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setNewPassword(value);
+                  if (!validatePassword(value) && value.length > 0) {
+                    setPasswordError(
+                      <>
+                        Password must contain at least one uppercase, lowercase, <br />
+                        number, and special character.
+                      </>
+                    );
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
+                placeholder="Enter new password"
+                className={`w-full px-4 py-2 pr-10 bg-white/10 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${passwordError ? "border-red-400" : "focus:ring-indigo-500"
+                  }`}
+                required
+                minLength={8}
+                maxLength={20}
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+              >
+                {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {passwordError && (
               <p className="text-sm text-red-400 mt-1">{passwordError}</p>
             )}
           </div>
 
           {/* Confirm New Password */}
-          <div>
-            <input
-              type="password"
-              name="confirmNewPassword"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-              placeholder="Confirm new password"
-              className={`w-full px-4 py-2 bg-white/10 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${
-                confirmPasswordError
-                  ? "border-red-400"
-                  : "focus:ring-indigo-500"
-              }`}
-              required
-              minLength={8}
-              maxLength={20}
-            />
+          <div className="w-full">
+            <div className="relative">
+              <input
+                type={showConfirmNewPassword ? "text" : "password"}
+                name="confirmNewPassword"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className={`w-full px-4 py-2 pr-10 bg-white/10 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${confirmPasswordError ? "border-red-400" : "focus:ring-indigo-500"
+                  }`}
+                required
+                minLength={8}
+                maxLength={20}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+              >
+                {showConfirmNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {confirmPasswordError && (
-              <p className="text-sm text-red-400 mt-1">
-                {confirmPasswordError}
-              </p>
+              <p className="text-sm text-red-400 mt-1">{confirmPasswordError}</p>
             )}
           </div>
 

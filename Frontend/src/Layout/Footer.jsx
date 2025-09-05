@@ -57,7 +57,7 @@ function Footer() {
                 </li>
                 <li>
                   <NavLink
-                    to="/create"
+                    to="/user/create/blog"
                     className="hover:text-indigo-400 transition"
                   >
                     Write a Story
