@@ -74,6 +74,14 @@ export const editComment = async (req, res) => {
             })
         }
 
+        if(comment.createdAt.getTime() + 15*60*1000 < Date.now()){
+            return res.status(403).json({
+                statusCode: 403,
+                success: false,
+                message: "You can't edit comment after 15 minutes of creation",
+            });
+        }
+
         const { newComment } = req.body;
         if (!newComment) {
             return res.status(400).json({

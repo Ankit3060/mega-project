@@ -22,7 +22,7 @@ config({path: "./Config/config.env"});
 
 app.use(cors({
     origin : "http://localhost:5174",
-    methods : ["GET", "POST", "DELETE", "PUT"],
+    methods : ["GET", "POST", "DELETE", "PUT", "PATCH"],
     credentials : true
 }));
 

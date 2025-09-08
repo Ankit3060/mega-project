@@ -39,6 +39,7 @@ export const toggleLikeBlog = async (req, res) => {
                 statusCode: 200,
                 success: true,
                 message: "Blog unliked successfully",
+                liked : false,
                 blog,
             });
         } else {
@@ -52,6 +53,7 @@ export const toggleLikeBlog = async (req, res) => {
                 statusCode: 200,
                 success: true,
                 message: "Blog liked successfully",
+                liked : true,
                 blog,
             });
         }
