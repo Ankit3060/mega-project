@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { SlHeart, SlShare } from "react-icons/sl";
-import {BiComment,BiBookmark,BiArrowBack,BiDotsHorizontalRounded,BiEdit,BiTrash} from "react-icons/bi";
+import {
+  BiComment,
+  BiBookmark,
+  BiArrowBack,
+  BiDotsHorizontalRounded,
+  BiEdit,
+  BiTrash,
+} from "react-icons/bi";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../Context/authContext";
@@ -31,6 +38,8 @@ function ReadBlog() {
   const [liked, setLiked] = useState(false);
   const [like, setLike] = useState(0);
   const [saved, setSaved] = useState(false);
+  const [following, setFollowing] = useState(false);
+  const [blogMenuOpen, setBlogMenuOpen] = useState(false);
 
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -55,8 +64,8 @@ function ReadBlog() {
           }
         );
         setBlog(response.data.blog);
+        console.log(response.data.blog);
         setLiked(response.data.blog.likes.includes(user._id));
-
 
         const commentRes = await axios.get(
           `http://localhost:4000/api/v1/comment/getBlog-comment/${id}`,
@@ -66,17 +75,21 @@ function ReadBlog() {
         );
         setComments(commentRes.data.comments || []);
 
+        const followRes = await axios.get(
+          `http://localhost:4000/api/v1/subscribe/check-follow/${response.data.blog.owner._id}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        setFollowing(followRes.data.isFollowing);
+
         setLoading(false);
       } catch (error) {
         toast.error("Error loading blog");
-        console.error("Error fetching blog:", error);
         setLoading(false);
       }
     };
 
     if (id && accessToken) fetchBlog();
-  }, [id, accessToken]);
-
+  }, [id, accessToken, blog?.owner?._id]);
 
   const likeBlog = async () => {
     try {
@@ -94,8 +107,7 @@ function ReadBlog() {
     } catch (error) {
       toast.error("Error liking blog");
     }
-  }
-
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -104,7 +116,6 @@ function ReadBlog() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  
   const handleSave = () => setSaved(!saved);
 
   const handleShare = () => {
@@ -158,21 +169,11 @@ function ReadBlog() {
     }
 
     try {
-      console.log(
-        "Updating comment:",
-        commentId,
-        "with text:",
-        editCommentText
-      );
-      console.log("Access token:", accessToken ? "Present" : "Missing");
-
       const res = await axios.patch(
         `http://localhost:4000/api/v1/comment/update-comment/${commentId}`,
         { newComment: editCommentText },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-
-      console.log("Update response:", res.data);
 
       // Update the comment in the local state
       setComments(
@@ -187,14 +188,12 @@ function ReadBlog() {
       setEditCommentText("");
       toast.success("Comment updated successfully!");
     } catch (error) {
-      console.log("PATCH failed, trying PUT:", error.message);
       toast.error(error.response?.data?.message || "Failed to update comment");
     }
   };
 
   // Handle delete comment
   const handleDeleteComment = async (commentId, isOwner = false) => {
-
     try {
       const endpoint = isOwner
         ? `http://localhost:4000/api/v1/comment/blogOwner/delete-comment/${commentId}`
@@ -228,6 +227,48 @@ function ReadBlog() {
   const canBlogOwnerDelete = () => {
     return blog?.owner?._id === user?._id;
   };
+
+  // follow/unfollow
+  const followUnfollow = async () => {
+    if (!blog?.owner?._id) return;
+    try {
+      const res = await axios.post(
+        `http://localhost:4000/api/v1/subscribe/follow-unfollow/${blog.owner._id}`,
+        {},
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setFollowing(res.data.isFollowing);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to follow/unfollow");
+    }
+  };
+
+
+  const handleDeleteBlog = async (blogId) => {
+    try {
+      await axios.delete(
+        `http://localhost:4000/api/v1/blog/delete-blog/${blogId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      toast.success("Blog deleted successfully!");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete blog");  
+    }
+  }
+
+
+  useEffect(() => {
+  const handleClickOutside = () => setBlogMenuOpen(false);
+  document.addEventListener("click", handleClickOutside);
+  return () => document.removeEventListener("click", handleClickOutside);
+}, []);
+
 
   if (loading) {
     return (
@@ -275,6 +316,7 @@ function ReadBlog() {
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         <article className="bg-white rounded-2xl shadow-lg overflow-hidden">
+
           {/* Author Info */}
           <div className="p-6 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -294,9 +336,59 @@ function ReadBlog() {
                 </div>
               </div>
             </div>
-            <button className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white px-4 py-1 rounded-lg text-sm font-medium">
-              Follow
-            </button>
+
+            <div className="flex items-center gap-2 relative">
+              {/* Follow/Unfollow */}
+              {user?._id !== blog.owner?._id && (
+                <button
+                  onClick={followUnfollow}
+                  className={`${
+                    following
+                      ? "bg-green-400 hover:bg-green-500"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  } cursor-pointer text-white px-4 py-1 rounded-lg text-sm font-medium`}
+                >
+                  {following ? "Following" : "Follow"}
+                </button>
+              )}
+
+              {/* Blog Owner Options */}
+              {user?._id === blog.owner?._id && (
+                <div className="relative">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setBlogMenuOpen(!blogMenuOpen);
+                    }}
+                    className="p-2 cursor-pointer hover:bg-gray-200 rounded-full"
+                  >
+                    <BiDotsHorizontalRounded className="w-5 h-5 text-gray-600" />
+                  </button>
+
+                  {blogMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20">
+                      {/* Edit */}
+                      <button
+                        onClick={() => navigate(`/edit-blog/${blog._id}`)}
+                        className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                      >
+                        <BiEdit className="w-4 h-4" />
+                        Edit
+                      </button>
+
+                      {/* Delete */}
+                      <button
+                        onClick={()=>handleDeleteBlog(blog._id)}
+                        className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
+                      >
+                        <BiTrash className="w-4 h-4" />
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Blog Image */}
@@ -345,7 +437,7 @@ function ReadBlog() {
                 <BiComment className="w-5 h-5" />
                 <span className="text-sm font-medium">
                   Comment {comments.length > 0 && `(${comments.length})`}
-                  </span>
+                </span>
               </button>
 
               <button

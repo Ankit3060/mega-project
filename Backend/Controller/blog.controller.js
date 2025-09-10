@@ -7,14 +7,14 @@ import { sendSuccessfulPostUpdateMail } from "../Utils/senSuccessfullPostUpdate.
 
 export const createNewBlog = async (req, res) => {
     try {
-        const { title, content } = req.body;
+        const { title, content, category } = req.body;
         const ownerId = req.user._id;
 
-        if (!title || !content) {
+        if (!title || !content || !category) {
             return res.status(400).json({
                 statusCode: 400,
                 success: false,
-                message: "Title and content are required",
+                message: "Title, content, and category are required",
             });
         }
 
@@ -66,9 +66,26 @@ export const createNewBlog = async (req, res) => {
             };
         }
 
+        let finalCategories = [];
+
+        if (Array.isArray(category)) {
+            finalCategories = category.map((cat) => cat.trim());
+        } else if (typeof category === "string") {
+            finalCategories = category.split(",").map((cat) => cat.trim());
+        }
+
+        if (finalCategories.length === 0) {
+            return res.status(400).json({
+                statusCode: 400,
+                success: false,
+                message: "At least one category is required",
+            });
+        }
+
         const blog = await Blog.create({
             title,
             content,
+            category: finalCategories,
             owner: ownerId,
             blogImage: blogImageData,
             isPublished: true
@@ -97,7 +114,7 @@ export const createNewBlog = async (req, res) => {
 export const updateBlog = async (req, res) => {
     try {
         const { blogId } = req.params;
-        const { title, content } = req.body;
+        const { title, content, category } = req.body;
 
         if (!blogId) {
             return res.status(404).json({
@@ -162,6 +179,26 @@ export const updateBlog = async (req, res) => {
 
         if (title) blog.title = title;
         if (content) blog.content = content;
+        if (category) {
+            let finalCategories = [];
+
+            if (Array.isArray(category)) {
+                finalCategories = category.map((cat) => cat.trim());
+            } else if (typeof category === "string") {
+                finalCategories = category.split(",").map((cat) => cat.trim());
+            }
+
+            if (finalCategories.length > 5) {
+                return res.status(400).json({
+                    statusCode: 400,
+                    success: false,
+                    message: "You can only add up to 5 categories",
+                });
+            }
+
+            blog.category = finalCategories;
+        }
+
         blog.isPublished = true,
 
             await blog.save();
@@ -225,7 +262,7 @@ export const deleteBlog = async (req, res) => {
                 message: "Blog not found",
             });
         }
-        await Comment.deleteMany({blogId});
+        await Comment.deleteMany({ blogId });
 
         return res.status(200).json({
             statusCode: 200,
@@ -276,7 +313,7 @@ export const deleteBlogByAdmin = async (req, res) => {
                 message: "Blog not found",
             });
         }
-        await Comment.deleteMany({blogId});
+        await Comment.deleteMany({ blogId });
 
         return res.status(200).json({
             statusCode: 200,
@@ -297,8 +334,8 @@ export const deleteBlogByAdmin = async (req, res) => {
 export const getAllBlogs = async (req, res) => {
     try {
         const blogs = await Blog.find()
-                                .populate("owner", "userName fullName avatar")
-                                .sort({ createdAt: -1 });
+            .populate("owner", "userName fullName avatar")
+            .sort({ createdAt: -1 });
         res.status(200).json({
             statusCode: 200,
             success: true,
@@ -314,6 +351,30 @@ export const getAllBlogs = async (req, res) => {
         });
     }
 };
+
+
+export const getBlogByCategory = async (req, res) => {
+    try {
+        const category = req.params.category.trim();
+
+        const blog = await Blog.find({ category: { $in: [category] } }).populate("owner", "fullName userName avatar");
+
+        return res.status(200).json({
+            statusCode: 200,
+            success: true,
+            message: "Blog with category fetched successfully",
+            blog
+        })
+    } catch (error) {
+        return res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message: "Internal sever errror",
+            error: error.message
+        })
+    }
+}
+
 
 
 export const getParticularBlog = async (req, res) => {

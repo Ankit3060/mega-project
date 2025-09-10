@@ -6,30 +6,38 @@ import bannerImage from "../assets/bannerImage.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import dogImage from "../assets/dog.png";
+import { useParams } from "react-router-dom";
 
-function Profile() {
-  const { user, accessToken } = useAuth();
+function OtherUserProfile() {
+  const { accessToken } = useAuth();
+  const [user, setUser] = useState({});
   const [userBlog, setUserBlog] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [followingList, setFollowingList] = useState([]);
-  const [followerList, setFollowerList] = useState([]);
 
-  const id = user?._id;
+  const { id } = useParams();
   const navigateTo = useNavigate();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/user/get-user/${id}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
     const fetchUserBlog = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/blog/my-blog",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          `http://localhost:4000/api/v1/blog/user-blog/${id}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        setUserBlog(response.data.blogs);
+        setUserBlog(response.data.blogsOfUser);
       } catch (error) {
         console.error("Error fetching user blog:", error);
       }
@@ -39,14 +47,9 @@ function Profile() {
       try {
         const response = await axios.get(
           `http://localhost:4000/api/v1/subscribe/follower/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setFollowers(response.data.subscriberCount);
-        setFollowerList(response.data.followers);
       } catch (error) {
         console.error("Error fetching followers:", error);
       }
@@ -56,31 +59,27 @@ function Profile() {
       try {
         const response = await axios.get(
           `http://localhost:4000/api/v1/subscribe/following/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setFollowing(response.data.followingCount);
-        setFollowingList(response.data.following);
       } catch (error) {
         console.error("Error fetching following:", error);
       }
     };
 
+    fetchUser();
     fetchUserBlog();
     fetchFollower();
     fetchFollowing();
-  }, [accessToken]);
+  }, [accessToken, id]);
 
   const userData = {
     fullName: user?.fullName,
     username: "@" + user?.userName,
-    profileImage: user?.avatar.url,
+    profileImage: user?.avatar?.url,
     backgroundImage: user?.coverImage?.url,
-    followers: followers,
-    following: following,
+    followers,
+    following,
     blogs: userBlog || [],
   };
 
@@ -125,42 +124,19 @@ function Profile() {
 
                   {/* Followers/Following */}
                   <div className="flex gap-6">
-                    <button
-                      onClick={() =>
-                        navigateTo(`/${userData.username}/subscription`, {
-                          state: {
-                            followers: followerList,
-                            following: followingList,
-                            showFollowers: true
-                          }
-                        })
-                      }
-                      className="text-center cursor-pointer"
-                    >
+                    <div className="text-center">
                       <div className="text-xl md:text-2xl font-bold">
                         {userData.followers}
                       </div>
                       <div className="text-sm text-gray-300">Followers</div>
-                    </button>
+                    </div>
 
-                    <button
-                      onClick={() =>
-                        navigateTo(`/${userData.username}/subscription`, {
-                          state: {
-                            followers: followerList,
-                            following: followingList,
-                            showFollowers: false
-                          }
-                        })
-                      }
-                      className="text-center cursor-pointer"
-                    >
+                    <div className="text-center">
                       <div className="text-xl md:text-2xl font-bold">
                         {userData.following}
                       </div>
                       <div className="text-sm text-gray-300">Following</div>
-                    </button>
-
+                    </div>
                   </div>
                 </div>
               </div>
@@ -220,10 +196,16 @@ function Profile() {
               </div>
             </div>
           ))}
-          {userData.blogs.length<1 && (
+          {userData.blogs.length < 1 && (
             <div className="col-span-3 text-center">
-              <img src={dogImage} alt="No blogs" className="mx-auto mb-4 w-48 h-48"/>
-              <p className="text-center ml-9 text-gray-500">No blogs available</p>
+              <img
+                src={dogImage}
+                alt="No blogs"
+                className="mx-auto mb-4 w-48 h-48"
+              />
+              <p className="text-center ml-9 text-gray-500">
+                No blogs available
+              </p>
             </div>
           )}
         </div>
@@ -232,4 +214,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default OtherUserProfile;

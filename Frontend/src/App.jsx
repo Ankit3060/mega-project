@@ -13,13 +13,18 @@ import Profile from './Pages/Profile.jsx';
 import UpdateProfile from './Pages/UpdateProfile.jsx';
 import CreateBlog from './Pages/CreateBlog.jsx';
 import ReadBlog from './Components/ReadBlog.jsx';
+import FollowingUser from './Pages/Subscription.jsx';
+import Explore from './Pages/Explore.jsx';
+import ScrollToTop from './Layout/ScrollToTop.jsx';
+import EditBlog from './Components/EditBlog.jsx';
+import OtherUserProfile from './Components/OtherUserProfile.jsx';
 
 function App() {
   return (
     <>
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<><Layout /> <ScrollToTop /> </>}>
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -30,8 +35,12 @@ function App() {
           <Route path="/user/update/profile" element={<UpdateProfile />} />
           <Route path='/user/create/blog' element={<CreateBlog />} />
           <Route path="/blog/read/:id" element={<ReadBlog />} />
+          <Route path="/:userName/subscription" element={<FollowingUser />} />
+          <Route path='/explore' element={<Explore />} />
+          <Route path="/edit-blog/:blogId" element={<EditBlog />} />
+          <Route path="/user/profile/:id" element={<OtherUserProfile />} />
         </Route>
-      </Routes>
+      </Routes> 
     </Router>
     <ToastContainer
         position="top-right"

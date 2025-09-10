@@ -103,7 +103,7 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 mb-[-2.5rem]" >
       <div className="flex max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-6 pb-10 gap-6">
         {/* Left side - Blog Feed */}
         <div className="flex-1 min-w-0">
@@ -125,7 +125,9 @@ function Home() {
                       <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-gray-900 truncate">
+                      <h4
+                        onClick={() => navigateTo(`/user/profile/${blog.owner._id}`)} 
+                        className="font-semibold text-gray-900 truncate cursor-pointer">
                         {blog.owner.fullName}
                       </h4>
                       <div className="flex items-center gap-2 text-gray-500 text-sm">

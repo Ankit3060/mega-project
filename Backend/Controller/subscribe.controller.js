@@ -36,7 +36,8 @@ export const subscription = async (req, res) => {
 
             return res.status(200).json({
                 success: true,
-                message: "Unfollow successful"
+                message: "Unfollow successful",
+                isFollowing: false
             });
         }else{
             const newSubscriber = await Subscribe.create({ subscriber, blogger: bloggerId});
@@ -45,6 +46,7 @@ export const subscription = async (req, res) => {
                 statusCode: 200,
                 success: true,
                 message: "Follow successfully",
+                isFollowing: true,
                 newSubscriber
             })
         }
@@ -55,6 +57,37 @@ export const subscription = async (req, res) => {
             message: "Error while following/unfollowing user",
             error: error.message
         })
+    }
+}
+
+
+export const cheeckFollow = async(req, res)=>{
+    const {bloggerId} = req.params;
+    if(!bloggerId){
+        return res.status(400).json({
+            statusCode: 400,
+            success: false,
+            message : "Blogger id is required"
+        })
+    }
+    try {
+        const isFollowing = await Subscribe.findOne({
+            subscriber: req.user._id,
+            blogger: bloggerId
+        });
+        return res.status(200).json({
+            statusCode: 200,
+            success: true,
+            isFollowing: !!isFollowing,
+            message: isFollowing ? "You are following this user" : "You are not following this user"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message: "Error checking follow status",
+            error: error.message
+        });
     }
 }
 
@@ -80,7 +113,7 @@ export const followerCount = async (req,res)=>{
         }
 
         const subscriberCount = await Subscribe.countDocuments({ blogger: bloggerId });
-        const followers = await Subscribe.find({ blogger: bloggerId }).populate("subscriber", "userName fullName");
+        const followers = await Subscribe.find({ blogger: bloggerId }).populate("subscriber", "userName fullName avatar");
 
         return res.status(200).json({
             statusCode: 200,
@@ -121,7 +154,7 @@ export const followingCount = async (req,res)=>{
         }
 
         const followingCount = await Subscribe.countDocuments({ subscriber: userId });
-        const following = await Subscribe.find({ subscriber: userId }).populate("blogger", "userName fullName");
+        const following = await Subscribe.find({ subscriber: userId }).populate("blogger", "userName fullName avatar");
 
         return res.status(200).json({
             statusCode: 200,

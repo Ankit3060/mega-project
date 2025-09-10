@@ -11,7 +11,7 @@ const blogSchema = new mongoose.Schema({
         required: true,
         minLength: 20
     },
-    blogImage:{
+    blogImage: {
         public_id: String,
         url: String
     },
@@ -19,8 +19,8 @@ const blogSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    owner:{
-        type : mongoose.Schema.Types.ObjectId,
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
     likes: [
@@ -28,8 +28,19 @@ const blogSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         }
-    ]
+    ],
+    category: {
+        type: [String],
+        required: true,
+        validate: {
+            validator: function (arr) {
+                return arr.length > 0 && arr.length <= 5;
+            },
+            message: "Blog must have at least 1 category and no more than 5"
+        }
+    }
 
-},{timestamps: true});
+
+}, { timestamps: true });
 
 export const Blog = mongoose.model("Blog", blogSchema);

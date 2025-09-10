@@ -21,7 +21,7 @@ export const app = express();
 config({path: "./Config/config.env"});
 
 app.use(cors({
-    origin : "http://localhost:5174",
+    origin : "http://localhost:5173",
     methods : ["GET", "POST", "DELETE", "PUT", "PATCH"],
     credentials : true
 }));

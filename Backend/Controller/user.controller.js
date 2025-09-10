@@ -2,6 +2,7 @@ import { User } from "../Models/userModel.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import { isMarkedAsUntransferable } from "worker_threads";
 
 export const updateUserDetails = async (req, res) => {
   const { userId } = req.params;
@@ -243,13 +244,13 @@ export const updatePassword = async (req, res) => {
 }
 
 
-export const getAllUser = async(req,res)=>{
-  const user = await User.find({accountVerified:true}).select("-refreshToken");
+export const getAllUser = async (req, res) => {
+  const user = await User.find({ accountVerified: true }).select("-refreshToken");
   return res.status(200).json({
-  statusCode: 200,
-  success: true,
-  message: "User detail fetched successfully",
-  user
+    statusCode: 200,
+    success: true,
+    message: "User detail fetched successfully",
+    user
   })
 }
 
@@ -262,3 +263,40 @@ export const getCurrentUser = async (req, res) => {
     user: req.user,
   });
 };
+
+
+
+export const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Id is required",
+      })
+    }
+
+    const user = await User.findById(id).select("-refreshToken -role -accountVerified -otp -otpFailedAttempt -otpGenerated -resetTokenGeneratedTime -notified");;
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        success: false,
+        messag: "user not found",
+      })
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      success: true,
+      message: "User fetched succesfully",
+      user
+    })
+  } catch (error) {
+    return res.status(500).jjson({
+      statusCode: 500,
+      success: false,
+      message: "Intenal server error"
+    })
+  }
+}
