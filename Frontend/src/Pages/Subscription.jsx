@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/authContext";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 function FollowingUser() {
   const location = useLocation();
   const { user, accessToken } = useAuth();
+  const navigateTo = useNavigate();
 
   if (!user) {
     return (
@@ -124,7 +125,9 @@ function FollowingUser() {
                       className="w-12 h-12 rounded-full object-cover border"
                     />
                     <div>
-                      <h3 className="text-lg font-semibold">
+                      <h3 
+                        onClick={() => navigateTo('/user/profile/' + userInfo._id)}
+                        className="text-lg font-semibold cursor-pointer">
                         {userInfo.fullName}
                       </h3>
                       <p className="text-gray-500 text-sm">

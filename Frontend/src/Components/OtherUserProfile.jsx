@@ -9,11 +9,12 @@ import dogImage from "../assets/dog.png";
 import { useParams } from "react-router-dom";
 
 function OtherUserProfile() {
-  const { accessToken } = useAuth();
+  const { accessToken, user: currentUser } = useAuth(); // Get current logged-in user
   const [user, setUser] = useState({});
   const [userBlog, setUserBlog] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const { id } = useParams();
   const navigateTo = useNavigate();
@@ -67,11 +68,46 @@ function OtherUserProfile() {
       }
     };
 
+    const checkFollowStatus = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:4000/api/v1/subscribe/check-follow/${id}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        setIsFollowing(res.data.isFollowing);
+      } catch (error) {
+        console.error("Error checking follow status:", error);
+      }
+    };
+
     fetchUser();
     fetchUserBlog();
     fetchFollower();
     fetchFollowing();
+    if (id && accessToken) checkFollowStatus();
   }, [accessToken, id]);
+
+  const toggleFollow = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:4000/api/v1/subscribe/follow-unfollow/${id}`,
+        {},
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setIsFollowing(res.data.isFollowing);
+      
+      // Update follower count locally
+      if (res.data.isFollowing) {
+        setFollowers(prev => prev + 1);
+      } else {
+        setFollowers(prev => prev - 1);
+      }
+      
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error("Failed to follow/unfollow");
+    }
+  };
 
   const userData = {
     fullName: user?.fullName,
@@ -83,13 +119,22 @@ function OtherUserProfile() {
     blogs: userBlog || [],
   };
 
+  // Check if this is not the current user's own profile
+  const isOtherUser = currentUser?._id !== id;
+  
+  // Debug logs - remove these after fixing
+  console.log('currentUser:', currentUser);
+  console.log('currentUser._id:', currentUser?._id);
+  console.log('id from params:', id);
+  console.log('isOtherUser:', isOtherUser);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Background Header Section */}
       <div className="relative">
         {/* Background Image */}
         <div
-          className="h-48 md:h-64 bg-cover bg-center  "
+          className="h-48 md:h-64 bg-cover bg-center"
           style={{
             backgroundImage: userData.backgroundImage
               ? `url("${userData.backgroundImage}")`
@@ -99,6 +144,22 @@ function OtherUserProfile() {
           <div className="absolute inset-0 bg-opacity-30"></div>
         </div>
 
+        {/* Follow Button - Bottom Right - Always show for debugging */}
+        {(isOtherUser || true) && (
+          <div className="absolute bottom-4 right-4 z-20">
+            <button
+              onClick={toggleFollow}
+              className={`px-6 cursor-pointer py-2 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                isFollowing
+                  ? "bg-green-500 text-white hover:bg-green-600 border-2 border-green-500"
+                  : "bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-500"
+              }`}
+            >
+              {isFollowing ? "Following" : "Follow"}
+            </button>
+          </div>
+        )}
+
         {/* Profile Info Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/70 to-transparent">
           <div className="max-w-6xl mx-auto">
@@ -106,7 +167,7 @@ function OtherUserProfile() {
               {/* Profile Image */}
               <div className="relative">
                 <img
-                  src={userData.profileImage}
+                  src={userData.profileImage || "https://via.placeholder.com/128"}
                   alt={userData.fullName}
                   className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg object-cover"
                 />

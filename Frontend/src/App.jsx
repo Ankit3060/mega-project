@@ -18,6 +18,7 @@ import Explore from './Pages/Explore.jsx';
 import ScrollToTop from './Layout/ScrollToTop.jsx';
 import EditBlog from './Components/EditBlog.jsx';
 import OtherUserProfile from './Components/OtherUserProfile.jsx';
+import AboutUs from './Pages/About.jsx';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path='/explore' element={<Explore />} />
           <Route path="/edit-blog/:blogId" element={<EditBlog />} />
           <Route path="/user/profile/:id" element={<OtherUserProfile />} />
+          <Route path='/about' element={<AboutUs/>} />
         </Route>
       </Routes> 
     </Router>

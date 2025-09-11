@@ -40,6 +40,7 @@ function ReadBlog() {
   const [saved, setSaved] = useState(false);
   const [following, setFollowing] = useState(false);
   const [blogMenuOpen, setBlogMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -258,16 +259,56 @@ function ReadBlog() {
       toast.success("Blog deleted successfully!");
       navigate("/");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to delete blog");  
+      toast.error(error.response?.data?.message || "Failed to delete blog");
     }
   }
 
 
   useEffect(() => {
-  const handleClickOutside = () => setBlogMenuOpen(false);
-  document.addEventListener("click", handleClickOutside);
-  return () => document.removeEventListener("click", handleClickOutside);
-}, []);
+    const handleClickOutside = () => setBlogMenuOpen(false);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+
+  useEffect(() => {
+    if (user?.role === "Admin") {
+      setIsAdmin(true);
+    }
+  }, [user]);
+
+  console.log(isAdmin);
+
+  const handleDeleteBlogByAdmin = async (blogId) => {
+    try {
+      await axios.delete(
+        `http://localhost:4000/api/v1/blog/admin/delete-blog/${blogId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      toast.success("Blog deleted successfully by Admin!");
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete blog by Admin");
+    }
+  };
+
+
+  const handleDeleteCommentByAdmin = async (commentId) => {
+    try {
+      await axios.delete(
+        `http://localhost:4000/api/v1/comment/admin/delete-comment/${commentId}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setComments(comments.filter((c) => c._id !== commentId));
+      toast.success("Comment deleted successfully by Admin!");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete comment by Admin");
+    }
+  };
+
+
 
 
   if (loading) {
@@ -326,7 +367,9 @@ function ReadBlog() {
                 className="w-12 h-12 rounded-full border-2 border-blue-100 object-cover"
               />
               <div>
-                <h4 className="font-semibold text-gray-900">
+                <h4
+                  onClick={()=>navigate('/user/profile/'+blog.owner?._id)} 
+                  className="font-semibold text-gray-900 cursor-pointer">
                   {blog.owner?.fullName}
                 </h4>
                 <div className="flex items-center gap-2 text-gray-500 text-sm">
@@ -342,18 +385,17 @@ function ReadBlog() {
               {user?._id !== blog.owner?._id && (
                 <button
                   onClick={followUnfollow}
-                  className={`${
-                    following
-                      ? "bg-green-400 hover:bg-green-500"
-                      : "bg-blue-500 hover:bg-blue-600"
-                  } cursor-pointer text-white px-4 py-1 rounded-lg text-sm font-medium`}
+                  className={`${following
+                    ? "bg-green-400 hover:bg-green-500"
+                    : "bg-blue-500 hover:bg-blue-600"
+                    } cursor-pointer text-white px-4 py-1 rounded-lg text-sm font-medium`}
                 >
                   {following ? "Following" : "Follow"}
                 </button>
               )}
 
               {/* Blog Owner Options */}
-              {user?._id === blog.owner?._id && (
+              {(user?._id === blog.owner?._id || isAdmin) && (
                 <div className="relative">
                   <button
                     onClick={(e) => {
@@ -366,28 +408,35 @@ function ReadBlog() {
                   </button>
 
                   {blogMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20">
-                      {/* Edit */}
-                      <button
-                        onClick={() => navigate(`/edit-blog/${blog._id}`)}
-                        className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                      >
-                        <BiEdit className="w-4 h-4" />
-                        Edit
-                      </button>
+                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20">
+                      {/* Edit - only blog owner */}
+                      {user?._id === blog.owner?._id && (
+                        <button
+                          onClick={() => navigate(`/edit-blog/${blog._id}`)}
+                          className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                        >
+                          <BiEdit className="w-4 h-4" />
+                          Edit
+                        </button>
+                      )}
 
-                      {/* Delete */}
+                      {/* Delete - owner or admin */}
                       <button
-                        onClick={()=>handleDeleteBlog(blog._id)}
+                        onClick={() =>
+                          isAdmin
+                            ? handleDeleteBlogByAdmin(blog._id)
+                            : handleDeleteBlog(blog._id)
+                        }
                         className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
                       >
                         <BiTrash className="w-4 h-4" />
-                        Delete
+                        {isAdmin ? "Delete by Admin" : "Delete"}
                       </button>
                     </div>
                   )}
                 </div>
               )}
+
             </div>
           </div>
 
@@ -419,9 +468,8 @@ function ReadBlog() {
             <div className="flex items-center gap-6">
               <button
                 onClick={likeBlog}
-                className={`flex cursor-pointer items-center gap-2 transition-colors ${
-                  liked ? "text-red-500" : "text-gray-500 hover:text-red-500"
-                }`}
+                className={`flex cursor-pointer items-center gap-2 transition-colors ${liked ? "text-red-500" : "text-gray-500 hover:text-red-500"
+                  }`}
               >
                 <SlHeart className={`w-5 h-5 ${liked ? "fill-current" : ""}`} />
                 <span className="text-sm font-medium">
@@ -450,11 +498,10 @@ function ReadBlog() {
 
               <button
                 onClick={handleSave}
-                className={`flex cursor-pointer items-center gap-2 transition-colors ${
-                  saved
-                    ? "text-yellow-600"
-                    : "text-gray-500 hover:text-yellow-600"
-                }`}
+                className={`flex cursor-pointer items-center gap-2 transition-colors ${saved
+                  ? "text-yellow-600"
+                  : "text-gray-500 hover:text-yellow-600"
+                  }`}
               >
                 <BiBookmark
                   className={`w-5 h-5 ${saved ? "fill-current" : ""}`}
@@ -522,7 +569,9 @@ function ReadBlog() {
                       <div className="bg-gray-50 rounded-lg p-4 relative">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-gray-900">
+                            <span
+                              onClick={() => navigate(`/user/profile/${comment.userId?._id}`)}
+                              className="font-semibold text-gray-900 cursor-pointer">
                               {comment.userId?.fullName}
                             </span>
                             <span className="text-gray-500">
@@ -534,7 +583,7 @@ function ReadBlog() {
                           </div>
 
                           {/* Three dots menu - Show if user can edit/delete OR if blog owner */}
-                          {(canEditDelete(comment) || canBlogOwnerDelete()) && (
+                          {(canEditDelete(comment) || canBlogOwnerDelete() || isAdmin) && (
                             <div className="relative">
                               <button
                                 onClick={(e) => {
@@ -567,16 +616,19 @@ function ReadBlog() {
                                   {/* Delete option - for comment owner or blog owner */}
                                   <button
                                     onClick={() =>
-                                      handleDeleteComment(
-                                        comment._id,
-                                        !canEditDelete(comment)
-                                      )
+                                      isAdmin
+                                        ? handleDeleteCommentByAdmin(comment._id)
+                                        : handleDeleteComment(
+                                          comment._id,
+                                          !canEditDelete(comment)
+                                        )
                                     }
                                     className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
                                   >
                                     <BiTrash className="w-4 h-4" />
-                                    Delete
+                                    {isAdmin ? "Delete " : "Delete"}
                                   </button>
+
                                 </div>
                               )}
                             </div>

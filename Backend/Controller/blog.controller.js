@@ -357,7 +357,7 @@ export const getBlogByCategory = async (req, res) => {
     try {
         const category = req.params.category.trim();
 
-        const blog = await Blog.find({ category: { $in: [category] } }).populate("owner", "fullName userName avatar");
+        const blog = await Blog.find({ category: { $in: [category] } }).populate("owner", "fullName userName avatar").sort({ createdAt: -1 });
 
         return res.status(200).json({
             statusCode: 200,

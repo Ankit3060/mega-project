@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../Context/authContext";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Explore() {
@@ -11,10 +11,20 @@ function Explore() {
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const category = params.get("category");
+  if (category) {
+    setSearchInput(category);
+    fetchByCategory(category);
+  } else {
     fetchAllBlogs();
-  }, []);
+  }
+}, [location.search]);
+
 
   const fetchAllBlogs = async () => {
     try {
@@ -34,34 +44,39 @@ function Explore() {
       setLoading(false);
     }
   };
+  const fetchByCategory = async (category) => {
+  if (!category || !category.trim()) {
+    fetchAllBlogs();
+    return;
+  }
+  try {
+    setLoading(true);
+    const res = await axios.get(
+      `http://localhost:4000/api/v1/blog/category/${category}`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true,
+      }
+    );
+    setBlogs(res.data.blog || res.data.data || []);
+  } catch (error) {
+    toast.error("Error fetching blogs by category");
+    setBlogs([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const fetchByCategory = async () => {
-    if (!searchInput.trim()) {
-      fetchAllBlogs();
-      return;
-    }
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        `http://localhost:4000/api/v1/blog/category/${searchInput}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          withCredentials: true,
-        }
-      );
-      setBlogs(res.data.blog || res.data.data || []);
-    } catch (error) {
-      toast.error("Error fetching blogs by category");
-      setBlogs([]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    fetchByCategory();
-  };
+const handleSearch = (e) => {
+  e.preventDefault();
+  if (searchInput.trim()) {
+    navigate(`/explore?category=${searchInput}`);
+  } else {
+    navigate("/explore");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6 mb-[-2.5rem]">
