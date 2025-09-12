@@ -8,7 +8,6 @@ import {
   FaKaggle,
 } from "react-icons/fa";
 import { FaHashnode, FaXTwitter } from "react-icons/fa6";
-
 import { NavLink } from "react-router-dom";
 
 function Footer() {

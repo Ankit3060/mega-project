@@ -4,9 +4,11 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../Context/authContext";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../Context/themeContext";
 
 function CreateBlog() {
   const { accessToken } = useAuth();
+  const { theme } = useTheme();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState(null);
@@ -94,13 +96,19 @@ function CreateBlog() {
     }
   };
 
+  // 🔹 theme-based styles
+  const isDark = theme === "dark";
+  const bgMain = isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900";
+  const bgCard = isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300";
+  const inputBg = isDark ? "bg-gray-800 text-gray-200 placeholder-gray-500" : "bg-gray-50 text-gray-900 placeholder-gray-400";
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white mb-[-2.5rem]">
+    <div className={`min-h-screen ${bgMain} mb-[-2.5rem]`}>
       {/* Header */}
-      <div className="flex justify-between items-center p-6 border-b border-gray-800">
+      <div className={`flex justify-between items-center p-6 border-b ${isDark ? "border-gray-800" : "border-gray-300"}`}>
         <div className="flex items-center gap-4">
           {/* Add Cover Button */}
-          <label className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer transition-colors">
+          <label className={`flex items-center gap-2 px-4 py-2 ${isDark ? "bg-gray-800 hover:bg-gray-700" : "bg-gray-300 hover:bg-gray-300"} rounded-lg cursor-pointer transition-colors`}>
             <Image size={18} />
             <span>Add Cover</span>
             <input
@@ -115,25 +123,24 @@ function CreateBlog() {
         {/* Publish Button */}
         <button
           onClick={handlePublish}
-          className="px-6 py-2 cursor-pointer bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition-colors"
+          className="px-6 py-2 cursor-pointer bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-colors"
         >
           Publish
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto p-6 border border-gray-600 rounded-lg mt-6">
-        
+      <div className={`max-w-4xl mx-auto p-6 border rounded-lg mt-6 ${bgCard}`}>
         {/* Categories */}
         <div className="mb-8">
-          <label className="block mb-2 text-gray-400 font-medium">
+          <label className="block mb-2 font-medium text-gray-400">
             Categories (max 5)
           </label>
           <div className="flex gap-2 mb-4">
             <select
               value={categoryInput}
               onChange={(e) => setCategoryInput(e.target.value)}
-              className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg outline-none text-gray-200"
+              className={`flex-1 px-3 py-2 rounded-lg outline-none ${inputBg} border ${isDark ? "border-gray-700" : "border-gray-300"}`}
             >
               <option value="">Select a category...</option>
               <option value="Sport">Sport</option>
@@ -169,7 +176,7 @@ function CreateBlog() {
             {categories.map((cat) => (
               <div
                 key={cat}
-                className="flex items-center gap-2 px-3 py-1 bg-gray-700 text-sm rounded-lg"
+                className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${isDark ? "bg-gray-700" : "bg-gray-200"}`}
               >
                 {cat}
                 <button
@@ -195,7 +202,7 @@ function CreateBlog() {
             )}
             <button
               onClick={() => setCoverImage(null)}
-              className="absolute cursor-pointer top-4 right-4 p-2 bg-gray-900 bg-opacity-75 hover:bg-opacity-100 rounded-full transition-colors"
+              className="absolute cursor-pointer top-4 right-4 p-2 bg-black/70 hover:bg-black/90 rounded-full transition-colors"
             >
               <Plus size={16} className="rotate-45" />
             </button>
@@ -209,7 +216,7 @@ function CreateBlog() {
             placeholder="Article Title..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full text-4xl font-bold bg-transparent border-none outline-none placeholder-gray-500 text-gray-300"
+            className={`w-full text-4xl font-bold bg-transparent border-none outline-none ${isDark ? "text-gray-200 placeholder-gray-500" : "text-gray-900 placeholder-gray-400"}`}
           />
         </div>
 
@@ -219,11 +226,9 @@ function CreateBlog() {
             placeholder="Tell your story..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full min-h-96 bg-transparent border-none outline-none placeholder-gray-500 text-gray-300 text-lg leading-relaxed resize-none"
+            className={`w-full min-h-96 bg-transparent border-none outline-none resize-none text-lg leading-relaxed ${isDark ? "text-gray-300 placeholder-gray-500" : "text-gray-900 placeholder-gray-400"}`}
           />
         </div>
-
-        {/* 🔹 Categories Section */}
       </div>
     </div>
   );

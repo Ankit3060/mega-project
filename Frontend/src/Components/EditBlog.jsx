@@ -3,10 +3,12 @@ import { Image, Plus, X } from "lucide-react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../Context/authContext";
+import { useTheme } from "../Context/themeContext";
 import { useNavigate, useParams } from "react-router-dom";
 
 function EditBlog() {
   const { accessToken } = useAuth();
+  const { theme } = useTheme();
   const { blogId } = useParams();
   const navigate = useNavigate();
 
@@ -44,7 +46,7 @@ function EditBlog() {
         console.error("Error fetching blog:", error);
         toast.error("Failed to load blog data");
         setLoading(false);
-        navigate("/"); // Redirect if can't load blog
+        navigate("/");
       }
     };
 
@@ -131,28 +133,44 @@ function EditBlog() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center transition-colors duration-200 ${
+        theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
+      }`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-white">Loading blog...</p>
+          <p className={`transition-colors duration-200 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-700'
+          }`}>Loading blog...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white mb-[-2.5rem]">
+    <div className={`min-h-screen mb-[-2.5rem] transition-colors duration-200 ${
+      theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'
+    }`}>
       {/* Header */}
-      <div className="flex justify-between items-center p-6 border-b border-gray-800">
+      <div className={`flex justify-between items-center p-6 border-b transition-colors duration-200 ${
+        theme === 'dark' ? 'border-gray-800' : 'border-gray-200'
+      }`}>
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(`/blog/read/${blogId}`)}
-            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer transition-colors"
+            className={`px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 ${
+              theme === 'dark' 
+                ? 'bg-gray-800 hover:bg-gray-700 text-white'
+                : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+            }`}
           >
             Cancel
           </button>
 
-          <label className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg cursor-pointer transition-colors">
+          <label className={`flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 ${
+            theme === 'dark'
+              ? 'bg-gray-800 hover:bg-gray-700 text-white'
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+          }`}>
             <Image size={18} />
             <span>Change Cover</span>
             <input
@@ -166,7 +184,7 @@ function EditBlog() {
 
         <button
           onClick={handleUpdate}
-          className="px-6 py-2 cursor-pointer bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition-colors"
+          className="px-6 py-2 cursor-pointer bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition-colors text-white"
         >
           Update
         </button>
@@ -186,7 +204,7 @@ function EditBlog() {
                 setPreviewImage(null);
                 setCoverImage(null);
               }}
-              className="absolute top-2 right-2 p-2 bg-red-600 hover:bg-red-700 rounded-full cursor-pointer transition-colors"
+              className="absolute top-2 right-2 p-2 bg-red-600 hover:bg-red-700 rounded-full cursor-pointer transition-colors text-white"
             >
               <X size={16} />
             </button>
@@ -200,14 +218,20 @@ function EditBlog() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter your blog title..."
-            className="w-full text-4xl md:text-5xl font-bold bg-transparent border-none outline-none placeholder-gray-500 text-white resize-none"
+            className={`w-full text-4xl md:text-5xl font-bold bg-transparent border-none outline-none resize-none transition-colors duration-200 ${
+              theme === 'dark' 
+                ? 'placeholder-gray-500 text-white'
+                : 'placeholder-gray-400 text-gray-900'
+            }`}
             style={{ lineHeight: "1.2" }}
           />
         </div>
 
         {/* Categories */}
         <div className="mb-6">
-          <label className="block mb-2 text-gray-400 font-medium">
+          <label className={`block mb-2 font-medium transition-colors duration-200 ${
+            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+          }`}>
             Categories (max 5)
           </label>
 
@@ -234,7 +258,11 @@ function EditBlog() {
             <select
               value={categoryInput}
               onChange={(e) => setCategoryInput(e.target.value)}
-              className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg outline-none text-gray-200"
+              className={`flex-1 px-3 py-2 border rounded-lg outline-none transition-colors duration-200 ${
+                theme === 'dark'
+                  ? 'bg-gray-800 border-gray-700 text-gray-200'
+                  : 'bg-white border-gray-300 text-gray-700'
+              }`}
             >
               <option value="">Select a category...</option>
               <option value="Sport">Sport</option>
@@ -272,7 +300,7 @@ function EditBlog() {
                 setCategories([...categories, categoryInput]);
                 setCategoryInput("");
               }}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white transition-colors"
             >
               Add
             </button>
@@ -285,13 +313,19 @@ function EditBlog() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Write your blog content here..."
-            className="w-full min-h-96 p-4 bg-gray-800 border border-gray-700 rounded-lg outline-none focus:border-blue-500 transition-colors resize-none text-lg leading-relaxed"
+            className={`w-full min-h-96 p-4 border rounded-lg outline-none focus:border-blue-500 transition-colors resize-none text-lg leading-relaxed ${
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400'
+                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+            }`}
             style={{ fontFamily: "inherit" }}
           />
         </div>
 
         {/* Character Count */}
-        <div className="text-right text-gray-400 text-sm mb-4">
+        <div className={`text-right text-sm mb-4 transition-colors duration-200 ${
+          theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+        }`}>
           {content.length} characters
         </div>
       </div>

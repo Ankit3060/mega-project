@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Context/authContext";
+import { useTheme } from "../Context/themeContext";
 import axios from "axios";
 import blogImages from "../assets/blogImage.png";
-import bannerImage from "../assets/bannerImage.png";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import dogImage from "../assets/dog.png";
-import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 function OtherUserProfile() {
-  const { accessToken, user: currentUser } = useAuth(); // Get current logged-in user
+  const { accessToken, user: currentUser } = useAuth();
+  const { theme } = useTheme();
   const [user, setUser] = useState({});
   const [userBlog, setUserBlog] = useState([]);
   const [followers, setFollowers] = useState([]);
@@ -95,14 +95,13 @@ function OtherUserProfile() {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setIsFollowing(res.data.isFollowing);
-      
-      // Update follower count locally
+
       if (res.data.isFollowing) {
-        setFollowers(prev => prev + 1);
+        setFollowers((prev) => prev + 1);
       } else {
-        setFollowers(prev => prev - 1);
+        setFollowers((prev) => prev - 1);
       }
-      
+
       toast.success(res.data.message);
     } catch (error) {
       toast.error("Failed to follow/unfollow");
@@ -119,20 +118,12 @@ function OtherUserProfile() {
     blogs: userBlog || [],
   };
 
-  // Check if this is not the current user's own profile
   const isOtherUser = currentUser?._id !== id;
-  
-  // Debug logs - remove these after fixing
-  console.log('currentUser:', currentUser);
-  console.log('currentUser._id:', currentUser?._id);
-  console.log('id from params:', id);
-  console.log('isOtherUser:', isOtherUser);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"} min-h-screen mb-[-2.5rem]`}>
       {/* Background Header Section */}
       <div className="relative">
-        {/* Background Image */}
         <div
           className="h-48 md:h-64 bg-cover bg-center"
           style={{
@@ -144,12 +135,11 @@ function OtherUserProfile() {
           <div className="absolute inset-0 bg-opacity-30"></div>
         </div>
 
-        {/* Follow Button - Bottom Right - Always show for debugging */}
-        {(isOtherUser || true) && (
+        {isOtherUser && (
           <div className="absolute bottom-4 right-4 z-20">
             <button
               onClick={toggleFollow}
-              className={`px-6 cursor-pointer py-2 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+              className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer ${
                 isFollowing
                   ? "bg-green-500 text-white hover:bg-green-600 border-2 border-green-500"
                   : "bg-blue-500 text-white hover:bg-blue-600 border-2 border-blue-500"
@@ -160,11 +150,9 @@ function OtherUserProfile() {
           </div>
         )}
 
-        {/* Profile Info Overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/70 to-transparent">
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row items-start md:items-end gap-6">
-              {/* Profile Image */}
               <div className="relative">
                 <img
                   src={userData.profileImage || "https://via.placeholder.com/128"}
@@ -173,27 +161,25 @@ function OtherUserProfile() {
                 />
               </div>
 
-              {/* User Details */}
-              <div className="flex-1 text-white">
+              <div className="flex-1">
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
                   <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">
+                    <h1 className="text-2xl md:text-3xl font-bold text-white">
                       {userData.fullName}
                     </h1>
-                    <p className="text-gray-200 text-lg">{userData.username}</p>
+                    <p className="text-gray-300">{userData.username}</p>
                   </div>
 
-                  {/* Followers/Following */}
                   <div className="flex gap-6">
                     <div className="text-center">
-                      <div className="text-xl md:text-2xl font-bold">
+                      <div className="text-xl md:text-2xl font-bold text-white">
                         {userData.followers}
                       </div>
                       <div className="text-sm text-gray-300">Followers</div>
                     </div>
 
                     <div className="text-center">
-                      <div className="text-xl md:text-2xl font-bold">
+                      <div className="text-xl md:text-2xl font-bold text-white">
                         {userData.following}
                       </div>
                       <div className="text-sm text-gray-300">Following</div>
@@ -209,47 +195,39 @@ function OtherUserProfile() {
       {/* Blogs Section */}
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl md:text-3xl font-bold mb-2">
             Blogs ({userData.blogs.length})
           </h2>
           <div className="w-16 h-1 bg-blue-600"></div>
         </div>
 
-        {/* Blog Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {userData.blogs.map((blog) => (
             <div
-              key={blog.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              key={blog._id}
+              className={`${theme === "dark" ? "bg-gray-800 text-white hover:shadow-blue-400" : "bg-white text-gray-800"} rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300`}
             >
-              {/* Blog Image */}
               <div className="h-48 overflow-hidden">
                 <img
                   src={blog.blogImage?.url || blogImages}
-                  alt={" image"}
+                  alt={"blog image"}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
 
-              {/* Blog Content */}
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">
+                <h3 className="text-xl font-semibold mb-3 line-clamp-2">
                   {blog.title}
                 </h3>
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {blog.content}
-                </p>
+                <p className="mb-4 line-clamp-3">{blog.content}</p>
 
-                {/* Blog Meta */}
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>
-                    {new Date(blog.createdAt).toLocaleDateString("en-IN")}
-                  </span>
+                <div className="flex justify-between items-center text-sm opacity-80">
+                  <span>{new Date(blog.createdAt).toLocaleDateString("en-IN")}</span>
                   <span>{blog.readTime || "4 Min read"}</span>
                 </div>
 
                 <button
-                  className="w-full mt-3 py-2 px-4 bg-blue-700 text-white font-medium rounded-lg hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+                  className="w-full mt-3 py-2 px-4 bg-blue-700 text-white font-medium rounded-lg hover:bg-blue-800 transition-colors duration-300 cursor-pointer"
                   onClick={() => navigateTo(`/blog/read/${blog._id}`)}
                 >
                   Read
@@ -257,16 +235,11 @@ function OtherUserProfile() {
               </div>
             </div>
           ))}
+
           {userData.blogs.length < 1 && (
             <div className="col-span-3 text-center">
-              <img
-                src={dogImage}
-                alt="No blogs"
-                className="mx-auto mb-4 w-48 h-48"
-              />
-              <p className="text-center ml-9 text-gray-500">
-                No blogs available
-              </p>
+              <img src={dogImage} alt="No blogs" className="mx-auto mb-4 w-48 h-48" />
+              <p className="text-gray-500">No blogs available</p>
             </div>
           )}
         </div>

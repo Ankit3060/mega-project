@@ -12,6 +12,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../Context/authContext";
 import { toast } from "react-toastify";
+import { useTheme } from "../Context/themeContext";
 
 function timeAgo(date) {
   const now = new Date();
@@ -32,6 +33,9 @@ function ReadBlog() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { accessToken, user } = useAuth();
+  const { theme } = useTheme();
+
+  const isDark = theme === "dark";
 
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +50,6 @@ function ReadBlog() {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
 
-  // New states for edit/delete functionality
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [editingComment, setEditingComment] = useState(null);
   const [editCommentText, setEditCommentText] = useState("");
@@ -65,7 +68,6 @@ function ReadBlog() {
           }
         );
         setBlog(response.data.blog);
-        console.log(response.data.blog);
         setLiked(response.data.blog.likes.includes(user._id));
 
         const commentRes = await axios.get(
@@ -90,7 +92,7 @@ function ReadBlog() {
     };
 
     if (id && accessToken) fetchBlog();
-  }, [id, accessToken, blog?.owner?._id]);
+  }, [id, accessToken, user._id]);
 
   const likeBlog = async () => {
     try {
@@ -110,7 +112,6 @@ function ReadBlog() {
     }
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdown(null);
     document.addEventListener("click", handleClickOutside);
@@ -155,14 +156,12 @@ function ReadBlog() {
     }
   };
 
-  // Handle edit comment
   const handleEditComment = (comment) => {
     setEditingComment(comment._id);
     setEditCommentText(comment.comment);
     setActiveDropdown(null);
   };
 
-  // Handle update comment
   const handleUpdateComment = async (commentId) => {
     if (!editCommentText.trim()) {
       toast.error("Comment cannot be empty");
@@ -176,7 +175,6 @@ function ReadBlog() {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      // Update the comment in the local state
       setComments(
         comments.map((comment) =>
           comment._id === commentId
@@ -193,7 +191,6 @@ function ReadBlog() {
     }
   };
 
-  // Handle delete comment
   const handleDeleteComment = async (commentId, isOwner = false) => {
     try {
       const endpoint = isOwner
@@ -204,7 +201,6 @@ function ReadBlog() {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      // Remove the comment from local state
       setComments(comments.filter((comment) => comment._id !== commentId));
       setActiveDropdown(null);
       toast.success("Comment deleted successfully!");
@@ -213,23 +209,19 @@ function ReadBlog() {
     }
   };
 
-  // Cancel editing
   const cancelEdit = () => {
     setEditingComment(null);
     setEditCommentText("");
   };
 
-  // Check if user can edit/delete comment
   const canEditDelete = (comment) => {
     return comment.userId?._id === user?._id || comment.userId === user?._id;
   };
 
-  // Check if blog owner can delete comment
   const canBlogOwnerDelete = () => {
     return blog?.owner?._id === user?._id;
   };
 
-  // follow/unfollow
   const followUnfollow = async () => {
     if (!blog?.owner?._id) return;
     try {
@@ -244,7 +236,6 @@ function ReadBlog() {
       toast.error(error.response?.data?.message || "Failed to follow/unfollow");
     }
   };
-
 
   const handleDeleteBlog = async (blogId) => {
     try {
@@ -261,8 +252,7 @@ function ReadBlog() {
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to delete blog");
     }
-  }
-
+  };
 
   useEffect(() => {
     const handleClickOutside = () => setBlogMenuOpen(false);
@@ -270,14 +260,11 @@ function ReadBlog() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-
   useEffect(() => {
     if (user?.role === "Admin") {
       setIsAdmin(true);
     }
   }, [user]);
-
-  console.log(isAdmin);
 
   const handleDeleteBlogByAdmin = async (blogId) => {
     try {
@@ -290,10 +277,11 @@ function ReadBlog() {
       toast.success("Blog deleted successfully by Admin!");
       navigate("/");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to delete blog by Admin");
+      toast.error(
+        error.response?.data?.message || "Failed to delete blog by Admin"
+      );
     }
   };
-
 
   const handleDeleteCommentByAdmin = async (commentId) => {
     try {
@@ -304,19 +292,24 @@ function ReadBlog() {
       setComments(comments.filter((c) => c._id !== commentId));
       toast.success("Comment deleted successfully by Admin!");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to delete comment by Admin");
+      toast.error(
+        error.response?.data?.message || "Failed to delete comment by Admin"
+      );
     }
   };
 
-
-
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div
+        className={`min-h-screen mb-[-2.5rem] flex items-center justify-center ${
+          isDark ? "bg-gray-900" : "bg-gray-50"
+        }`}
+      >
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading blog...</p>
+          <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
+            Loading blog...
+          </p>
         </div>
       </div>
     );
@@ -324,9 +317,17 @@ function ReadBlog() {
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          isDark ? "bg-gray-900" : "bg-gray-50"
+        }`}
+      >
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2
+            className={`text-2xl font-bold mb-4 ${
+              isDark ? "text-white" : "text-gray-900"
+            }`}
+          >
             Blog not found
           </h2>
           <button
@@ -341,25 +342,21 @@ function ReadBlog() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex cursor-pointer items-center gap-2 text-gray-600 hover:text-blue-900 transition-colors"
-          >
-            <BiArrowBack className="w-5 h-5" />
-            <span className="font-medium">Back</span>
-          </button>
-        </div>
-      </div>
-
+    <div className={`min-h-screen mb-[-2.5rem] ${isDark ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <article className="bg-white rounded-2xl shadow-lg overflow-hidden">
-
+        <article
+          className={`rounded-2xl shadow-lg overflow-hidden ${
+            isDark
+              ? "bg-gray-800 shadow-2xl shadow-blue-900/10"
+              : "bg-white"
+          }`}
+        >
           {/* Author Info */}
-          <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <div
+            className={`p-6 border-b flex items-center justify-between ${
+              isDark ? "border-gray-700" : "border-gray-100"
+            }`}
+          >
             <div className="flex items-center gap-4">
               <img
                 src={blog.owner?.avatar?.url || "/default-avatar.png"}
@@ -368,11 +365,18 @@ function ReadBlog() {
               />
               <div>
                 <h4
-                  onClick={()=>navigate('/user/profile/'+blog.owner?._id)} 
-                  className="font-semibold text-gray-900 cursor-pointer">
+                  onClick={() => navigate("/user/profile/" + blog.owner?._id)}
+                  className={`font-semibold cursor-pointer ${
+                    isDark ? "text-gray-100" : "text-gray-900"
+                  }`}
+                >
                   {blog.owner?.fullName}
                 </h4>
-                <div className="flex items-center gap-2 text-gray-500 text-sm">
+                <div
+                  className={`flex items-center gap-2 text-sm ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   <span>@{blog.owner?.userName}</span>
                   <span>•</span>
                   <span>{timeAgo(blog.createdAt)}</span>
@@ -381,20 +385,19 @@ function ReadBlog() {
             </div>
 
             <div className="flex items-center gap-2 relative">
-              {/* Follow/Unfollow */}
               {user?._id !== blog.owner?._id && (
                 <button
                   onClick={followUnfollow}
-                  className={`${following
-                    ? "bg-green-400 hover:bg-green-500"
-                    : "bg-blue-500 hover:bg-blue-600"
-                    } cursor-pointer text-white px-4 py-1 rounded-lg text-sm font-medium`}
+                  className={`${
+                    following
+                      ? "bg-green-400 hover:bg-green-500"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  } cursor-pointer text-white px-4 py-1 rounded-lg text-sm font-medium`}
                 >
                   {following ? "Following" : "Follow"}
                 </button>
               )}
 
-              {/* Blog Owner Options */}
               {(user?._id === blog.owner?._id || isAdmin) && (
                 <div className="relative">
                   <button
@@ -402,32 +405,50 @@ function ReadBlog() {
                       e.stopPropagation();
                       setBlogMenuOpen(!blogMenuOpen);
                     }}
-                    className="p-2 cursor-pointer hover:bg-gray-200 rounded-full"
+                    className={`p-2 cursor-pointer rounded-full ${
+                      isDark ? "hover:bg-gray-700" : "hover:bg-gray-200"
+                    }`}
                   >
-                    <BiDotsHorizontalRounded className="w-5 h-5 text-gray-600" />
+                    <BiDotsHorizontalRounded
+                      className={`w-5 h-5 ${
+                        isDark ? "text-gray-400" : "text-gray-600"
+                      }`}
+                    />
                   </button>
 
                   {blogMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20">
-                      {/* Edit - only blog owner */}
+                    <div
+                      className={`absolute right-0 mt-2 w-40 border rounded-lg shadow-lg py-1 z-20 ${
+                        isDark
+                          ? "bg-gray-800 border-gray-600"
+                          : "bg-white border-gray-200"
+                      }`}
+                    >
                       {user?._id === blog.owner?._id && (
                         <button
                           onClick={() => navigate(`/edit-blog/${blog._id}`)}
-                          className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                          className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm w-full text-left ${
+                            isDark
+                              ? "text-gray-300 hover:bg-gray-700"
+                              : "text-gray-700 hover:bg-gray-100"
+                          }`}
                         >
                           <BiEdit className="w-4 h-4" />
                           Edit
                         </button>
                       )}
 
-                      {/* Delete - owner or admin */}
                       <button
                         onClick={() =>
                           isAdmin
                             ? handleDeleteBlogByAdmin(blog._id)
                             : handleDeleteBlog(blog._id)
                         }
-                        className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
+                        className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm w-full text-left ${
+                          isDark
+                            ? "text-red-500 hover:bg-red-900/50"
+                            : "text-red-600 hover:bg-red-50"
+                        }`}
                       >
                         <BiTrash className="w-4 h-4" />
                         {isAdmin ? "Delete by Admin" : "Delete"}
@@ -436,11 +457,9 @@ function ReadBlog() {
                   )}
                 </div>
               )}
-
             </div>
           </div>
 
-          {/* Blog Image */}
           {blog.blogImage && (
             <div className="mb-6">
               <img
@@ -451,25 +470,42 @@ function ReadBlog() {
             </div>
           )}
 
-          {/* Blog Content */}
           <div className="p-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1
+              className={`text-3xl md:text-4xl font-bold mb-6 leading-tight ${
+                isDark ? "text-white" : "text-gray-900"
+              }`}
+            >
               {blog.title}
             </h1>
             <div className="prose prose-lg max-w-none">
-              <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+              <p
+                className={`whitespace-pre-wrap ${
+                  isDark ? "text-gray-300" : "text-gray-800"
+                }`}
+              >
                 {blog.content}
               </p>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
+          <div
+            className={`px-6 py-4 border-t ${
+              isDark
+                ? "border-gray-700 bg-gray-800/50"
+                : "border-gray-100 bg-gray-50"
+            }`}
+          >
             <div className="flex items-center gap-6">
               <button
                 onClick={likeBlog}
-                className={`flex cursor-pointer items-center gap-2 transition-colors ${liked ? "text-red-500" : "text-gray-500 hover:text-red-500"
-                  }`}
+                className={`flex cursor-pointer items-center gap-2 transition-colors ${
+                  liked
+                    ? "text-red-500"
+                    : isDark
+                    ? "text-gray-400 hover:text-red-400"
+                    : "text-gray-500 hover:text-red-500"
+                }`}
               >
                 <SlHeart className={`w-5 h-5 ${liked ? "fill-current" : ""}`} />
                 <span className="text-sm font-medium">
@@ -480,7 +516,11 @@ function ReadBlog() {
 
               <button
                 onClick={() => setShowCommentBox(!showCommentBox)}
-                className="flex cursor-pointer items-center gap-2 text-gray-500 hover:text-blue-500 transition-colors"
+                className={`flex cursor-pointer items-center gap-2 transition-colors ${
+                  isDark
+                    ? "text-gray-400 hover:text-blue-400"
+                    : "text-gray-500 hover:text-blue-500"
+                }`}
               >
                 <BiComment className="w-5 h-5" />
                 <span className="text-sm font-medium">
@@ -490,7 +530,11 @@ function ReadBlog() {
 
               <button
                 onClick={handleShare}
-                className="flex cursor-pointer items-center gap-2 text-gray-500 hover:text-green-500 transition-colors"
+                className={`flex cursor-pointer items-center gap-2 transition-colors ${
+                  isDark
+                    ? "text-gray-400 hover:text-green-400"
+                    : "text-gray-500 hover:text-green-500"
+                }`}
               >
                 <SlShare className="w-5 h-5" />
                 <span className="text-sm font-medium">Share</span>
@@ -498,10 +542,15 @@ function ReadBlog() {
 
               <button
                 onClick={handleSave}
-                className={`flex cursor-pointer items-center gap-2 transition-colors ${saved
-                  ? "text-yellow-600"
-                  : "text-gray-500 hover:text-yellow-600"
-                  }`}
+                className={`flex cursor-pointer items-center gap-2 transition-colors ${
+                  saved
+                    ? isDark
+                      ? "text-yellow-500"
+                      : "text-yellow-600"
+                    : isDark
+                    ? "text-gray-400 hover:text-yellow-500"
+                    : "text-gray-500 hover:text-yellow-600"
+                }`}
               >
                 <BiBookmark
                   className={`w-5 h-5 ${saved ? "fill-current" : ""}`}
@@ -514,12 +563,26 @@ function ReadBlog() {
           </div>
         </article>
 
-        {/* Comments Section */}
-        <div className="mt-8 bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Comments</h3>
+        <div
+          className={`mt-8 rounded-2xl shadow-lg overflow-hidden ${
+            isDark
+              ? "bg-gray-800 shadow-2xl shadow-blue-900/10"
+              : "bg-white"
+          }`}
+        >
+          <div
+            className={`p-6 border-b ${
+              isDark ? "border-gray-700" : "border-gray-100"
+            }`}
+          >
+            <h3
+              className={`text-xl font-bold mb-4 ${
+                isDark ? "text-white" : "text-gray-900"
+              }`}
+            >
+              Comments
+            </h3>
 
-            {/* Add Comment Form (toggle only) */}
             {showCommentBox && (
               <form onSubmit={handleCommentSubmit} className="mb-6">
                 <div className="flex gap-4">
@@ -533,7 +596,11 @@ function ReadBlog() {
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder="Write a comment..."
-                      className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className={`w-full p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                        isDark
+                          ? "bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+                          : "border-gray-300"
+                      }`}
                       rows="3"
                     />
                     <div className="flex justify-end mt-3">
@@ -550,10 +617,13 @@ function ReadBlog() {
             )}
           </div>
 
-          {/* Comments List */}
           <div className="p-6">
             {comments.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
+              <p
+                className={`text-center py-8 ${
+                  isDark ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
                 No comments yet. Be the first to comment!
               </p>
             ) : (
@@ -566,24 +636,42 @@ function ReadBlog() {
                       className="w-10 h-10 rounded-full border-2 border-blue-100 object-cover"
                     />
                     <div className="flex-1">
-                      <div className="bg-gray-50 rounded-lg p-4 relative">
+                      <div
+                        className={`rounded-lg p-4 relative ${
+                          isDark ? "bg-gray-700" : "bg-gray-50"
+                        }`}
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <span
-                              onClick={() => navigate(`/user/profile/${comment.userId?._id}`)}
-                              className="font-semibold text-gray-900 cursor-pointer">
+                              onClick={() =>
+                                navigate(`/user/profile/${comment.userId?._id}`)
+                              }
+                              className={`font-semibold cursor-pointer ${
+                                isDark ? "text-gray-100" : "text-gray-900"
+                              }`}
+                            >
                               {comment.userId?.fullName}
                             </span>
-                            <span className="text-gray-500">
+                            <span
+                              className={`${
+                                isDark ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
                               @{comment.userId?.userName}
                             </span>
-                            <span className="text-gray-500 text-sm">
+                            <span
+                              className={`text-sm ${
+                                isDark ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
                               {timeAgo(comment?.createdAt)}
                             </span>
                           </div>
 
-                          {/* Three dots menu - Show if user can edit/delete OR if blog owner */}
-                          {(canEditDelete(comment) || canBlogOwnerDelete() || isAdmin) && (
+                          {(canEditDelete(comment) ||
+                            canBlogOwnerDelete() ||
+                            isAdmin) && (
                             <div className="relative">
                               <button
                                 onClick={(e) => {
@@ -594,48 +682,70 @@ function ReadBlog() {
                                       : comment._id
                                   );
                                 }}
-                                className="p-1 cursor-pointer hover:bg-gray-200 rounded-full transition-colors"
+                                className={`p-1 cursor-pointer rounded-full transition-colors ${
+                                  isDark
+                                    ? "hover:bg-gray-600"
+                                    : "hover:bg-gray-200"
+                                }`}
                               >
-                                <BiDotsHorizontalRounded className="w-4 h-4 text-gray-500" />
+                                <BiDotsHorizontalRounded
+                                  className={`w-4 h-4 ${
+                                    isDark
+                                      ? "text-gray-400"
+                                      : "text-gray-500"
+                                  }`}
+                                />
                               </button>
 
-                              {/* Dropdown Menu */}
                               {activeDropdown === comment._id && (
-                                <div className="absolute right-0 top-4 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20 min-w-[120px]">
-                                  {/* Edit option - only for comment owner */}
+                                <div
+                                  className={`absolute right-0 top-4 border rounded-lg shadow-lg py-1 z-20 min-w-[120px] ${
+                                    isDark
+                                      ? "bg-gray-800 border-gray-600"
+                                      : "bg-white border-gray-200"
+                                  }`}
+                                >
                                   {canEditDelete(comment) && (
                                     <button
-                                      onClick={() => handleEditComment(comment)}
-                                      className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                                      onClick={() =>
+                                        handleEditComment(comment)
+                                      }
+                                      className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm w-full text-left ${
+                                        isDark
+                                          ? "text-gray-300 hover:bg-gray-700"
+                                          : "text-gray-700 hover:bg-gray-100"
+                                      }`}
                                     >
                                       <BiEdit className="w-4 h-4" />
                                       Edit
                                     </button>
                                   )}
-
-                                  {/* Delete option - for comment owner or blog owner */}
                                   <button
                                     onClick={() =>
                                       isAdmin
-                                        ? handleDeleteCommentByAdmin(comment._id)
+                                        ? handleDeleteCommentByAdmin(
+                                            comment._id
+                                          )
                                         : handleDeleteComment(
-                                          comment._id,
-                                          !canEditDelete(comment)
-                                        )
+                                            comment._id,
+                                            !canEditDelete(comment)
+                                          )
                                     }
-                                    className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
+                                    className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm w-full text-left ${
+                                      isDark
+                                        ? "text-red-500 hover:bg-red-900/50"
+                                        : "text-red-600 hover:bg-red-50"
+                                    }`}
                                   >
                                     <BiTrash className="w-4 h-4" />
                                     {isAdmin ? "Delete " : "Delete"}
                                   </button>
-
                                 </div>
                               )}
                             </div>
                           )}
                         </div>
 
-                        {/* Comment content or edit form */}
                         {editingComment === comment._id ? (
                           <div className="mt-2">
                             <textarea
@@ -643,18 +753,28 @@ function ReadBlog() {
                               onChange={(e) =>
                                 setEditCommentText(e.target.value)
                               }
-                              className="w-full p-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              className={`w-full p-2 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                isDark
+                                  ? "bg-gray-600 border-gray-500 text-white"
+                                  : "border-gray-300"
+                              }`}
                               rows="3"
                             />
                             <div className="flex justify-end gap-2 mt-2">
                               <button
                                 onClick={cancelEdit}
-                                className="px-3 cursor-pointer py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                                className={`px-3 cursor-pointer py-1 text-sm transition-colors ${
+                                  isDark
+                                    ? "text-gray-400 hover:text-gray-200"
+                                    : "text-gray-600 hover:text-gray-800"
+                                }`}
                               >
                                 Cancel
                               </button>
                               <button
-                                onClick={() => handleUpdateComment(comment._id)}
+                                onClick={() =>
+                                  handleUpdateComment(comment._id)
+                                }
                                 className="px-3 cursor-pointer py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
                               >
                                 Save
@@ -662,7 +782,13 @@ function ReadBlog() {
                             </div>
                           </div>
                         ) : (
-                          <p className="text-gray-800">{comment.comment}</p>
+                          <p
+                            className={`${
+                              isDark ? "text-gray-300" : "text-gray-800"
+                            }`}
+                          >
+                            {comment.comment}
+                          </p>
                         )}
                       </div>
                     </div>

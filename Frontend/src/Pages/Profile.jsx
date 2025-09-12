@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Context/authContext";
+import { useTheme } from "../Context/themeContext";
 import axios from "axios";
 import blogImages from "../assets/blogImage.png";
-import bannerImage from "../assets/bannerImage.png";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import dogImage from "../assets/dog.png";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const { user, accessToken } = useAuth();
+  const { theme } = useTheme();
   const [userBlog, setUserBlog] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
@@ -72,12 +72,12 @@ function Profile() {
     fetchUserBlog();
     fetchFollower();
     fetchFollowing();
-  }, [accessToken]);
+  }, [accessToken, id]);
 
   const userData = {
     fullName: user?.fullName,
     username: "@" + user?.userName,
-    profileImage: user?.avatar.url,
+    profileImage: user?.avatar?.url,
     backgroundImage: user?.coverImage?.url,
     followers: followers,
     following: following,
@@ -85,12 +85,15 @@ function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      className={`min-h-screen mb-[-2.5rem] ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
+      }`}
+    >
       {/* Background Header Section */}
       <div className="relative">
-        {/* Background Image */}
         <div
-          className="h-48 md:h-64 bg-cover bg-center  "
+          className="h-48 md:h-64 bg-cover bg-center"
           style={{
             backgroundImage: userData.backgroundImage
               ? `url("${userData.backgroundImage}")`
@@ -131,8 +134,8 @@ function Profile() {
                           state: {
                             followers: followerList,
                             following: followingList,
-                            showFollowers: true
-                          }
+                            showFollowers: true,
+                          },
                         })
                       }
                       className="text-center cursor-pointer"
@@ -149,8 +152,8 @@ function Profile() {
                           state: {
                             followers: followerList,
                             following: followingList,
-                            showFollowers: false
-                          }
+                            showFollowers: false,
+                          },
                         })
                       }
                       className="text-center cursor-pointer"
@@ -160,7 +163,6 @@ function Profile() {
                       </div>
                       <div className="text-sm text-gray-300">Following</div>
                     </button>
-
                   </div>
                 </div>
               </div>
@@ -172,7 +174,11 @@ function Profile() {
       {/* Blogs Section */}
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+          <h2
+            className={`text-2xl md:text-3xl font-bold mb-2 ${
+              theme === "dark" ? "text-white" : "text-gray-800"
+            }`}
+          >
             Blogs ({userData.blogs.length})
           </h2>
           <div className="w-16 h-1 bg-blue-600"></div>
@@ -182,37 +188,42 @@ function Profile() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {userData.blogs.map((blog) => (
             <div
-              key={blog.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              key={blog._id}
+              className={`rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ${
+                theme === "dark" ? "bg-gray-800 text-white hover:shadow-blue-400" : "bg-white text-gray-800"
+              }`}
             >
-              {/* Blog Image */}
               <div className="h-48 overflow-hidden">
                 <img
                   src={blog.blogImage?.url || blogImages}
-                  alt={" image"}
+                  alt={"blog image"}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
 
-              {/* Blog Content */}
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3 line-clamp-2">
+                <h3 className="text-xl font-semibold mb-3 line-clamp-2">
                   {blog.title}
                 </h3>
-                <p className="text-gray-600 mb-4 line-clamp-3">
+                <p
+                  className={`mb-4 line-clamp-3 ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
                   {blog.content}
                 </p>
 
-                {/* Blog Meta */}
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>
-                    {new Date(blog.createdAt).toLocaleDateString("en-IN")}
-                  </span>
+                <div
+                  className={`flex justify-between items-center text-sm ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
+                  <span>{new Date(blog.createdAt).toLocaleDateString("en-IN")}</span>
                   <span>{blog.readTime || "4 Min read"}</span>
                 </div>
 
                 <button
-                  className="w-full mt-3 py-2 px-4 bg-blue-700 text-white font-medium rounded-lg hover:bg-blue-800 cursor-pointer transition-colors duration-300"
+                  className="w-full mt-3 py-2 px-4 bg-blue-700 text-white font-medium rounded-lg hover:bg-blue-800 transition-colors duration-300 cursor-pointer"
                   onClick={() => navigateTo(`/blog/read/${blog._id}`)}
                 >
                   Read
@@ -220,10 +231,20 @@ function Profile() {
               </div>
             </div>
           ))}
-          {userData.blogs.length<1 && (
+          {userData.blogs.length < 1 && (
             <div className="col-span-3 text-center">
-              <img src={dogImage} alt="No blogs" className="mx-auto mb-4 w-48 h-48"/>
-              <p className="text-center ml-9 text-gray-500">No blogs available</p>
+              <img
+                src={dogImage}
+                alt="No blogs"
+                className="mx-auto mb-4 w-48 h-48"
+              />
+              <p
+                className={`text-center ml-9 ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                No blogs available
+              </p>
             </div>
           )}
         </div>

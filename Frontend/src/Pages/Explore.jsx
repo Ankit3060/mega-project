@@ -2,29 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../Context/authContext";
-import {useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTheme } from "../Context/themeContext"
 
 function Explore() {
   const { accessToken } = useAuth();
+  const { theme } = useTheme();
   const [blogs, setBlogs] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-
   useEffect(() => {
-  const params = new URLSearchParams(location.search);
-  const category = params.get("category");
-  if (category) {
-    setSearchInput(category);
-    fetchByCategory(category);
-  } else {
-    fetchAllBlogs();
-  }
-}, [location.search]);
-
+    const params = new URLSearchParams(location.search);
+    const category = params.get("category");
+    if (category) {
+      setSearchInput(category);
+      fetchByCategory(category);
+    } else {
+      fetchAllBlogs();
+    }
+  }, [location.search]);
 
   const fetchAllBlogs = async () => {
     try {
@@ -44,42 +44,44 @@ function Explore() {
       setLoading(false);
     }
   };
+
   const fetchByCategory = async (category) => {
-  if (!category || !category.trim()) {
-    fetchAllBlogs();
-    return;
-  }
-  try {
-    setLoading(true);
-    const res = await axios.get(
-      `http://localhost:4000/api/v1/blog/category/${category}`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        withCredentials: true,
-      }
-    );
-    setBlogs(res.data.blog || res.data.data || []);
-  } catch (error) {
-    toast.error("Error fetching blogs by category");
-    setBlogs([]);
-  } finally {
-    setLoading(false);
-  }
-};
+    if (!category || !category.trim()) {
+      fetchAllBlogs();
+      return;
+    }
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        `http://localhost:4000/api/v1/blog/category/${category}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
+        }
+      );
+      setBlogs(res.data.blog || res.data.data || []);
+    } catch (error) {
+      toast.error("Error fetching blogs by category");
+      setBlogs([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-
-const handleSearch = (e) => {
-  e.preventDefault();
-  if (searchInput.trim()) {
-    navigate(`/explore?category=${searchInput}`);
-  } else {
-    navigate("/explore");
-  }
-};
-
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      navigate(`/explore?category=${searchInput}`);
+    } else {
+      navigate("/explore");
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6 mb-[-2.5rem]">
+    <div
+      className={`min-h-screen p-6 mb-[-2.5rem] transition-colors duration-300 
+      ${theme === "light" ? "bg-gray-200 text-black" : "bg-gray-900 text-white"}`}
+    >
       {/* Search Bar with Select */}
       <form
         onSubmit={handleSearch}
@@ -89,7 +91,10 @@ const handleSearch = (e) => {
         <select
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          className="flex-1 px-4 py-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 outline-none focus:ring-2 focus:ring-blue-600"
+          className={`flex-1 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-600 border
+            ${theme === "light"
+              ? "bg-gray-100 text-gray-800 border-gray-300"
+              : "bg-gray-800 text-gray-200 border-gray-700"}`}
         >
           <option value="">All Categories</option>
           <option value="Sport">Sport</option>
@@ -114,12 +119,11 @@ const handleSearch = (e) => {
         {/* Search Button */}
         <button
           type="submit"
-          className="px-5 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg flex items-center justify-center"
+          className="px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg flex items-center justify-center"
         >
           <Search size={24} />
         </button>
       </form>
-
 
       {/* 🔹 Blog Results */}
       {loading ? (
@@ -127,11 +131,12 @@ const handleSearch = (e) => {
       ) : blogs.length === 0 ? (
         <p className="text-center text-gray-400">No blogs found.</p>
       ) : (
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 ">
           {blogs.map((blog) => (
             <div
               key={blog._id}
-              className="bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:scale-[1.02] transition flex flex-col"
+              className={`rounded-xl shadow-lg hover:shadow-xl overflow-hidden hover:scale-[1.02] transition flex flex-col 
+                ${theme === "light" ? "bg-gray-100" : "bg-gray-800 hover:shadow-blue-400"}`}
             >
               {blog.blogImage?.url && (
                 <img
@@ -142,8 +147,16 @@ const handleSearch = (e) => {
               )}
 
               <div className="p-5 flex flex-col flex-grow">
-                <h2 className="text-xl font-bold mb-2">{blog.title}</h2>
-                <p className="text-gray-400 text-sm line-clamp-3 mb-3">
+                <h2
+                  className={`text-xl font-bold mb-2 
+                    ${theme === "light" ? "text-black" : "text-white"}`}
+                >
+                  {blog.title}
+                </h2>
+                <p
+                  className={`text-sm line-clamp-3 mb-3 
+                    ${theme === "light" ? "text-gray-700" : "text-gray-400"}`}
+                >
                   {blog.content}
                 </p>
 
@@ -151,7 +164,7 @@ const handleSearch = (e) => {
                   {blog.category?.map((cat) => (
                     <span
                       key={cat}
-                      className="px-3 py-1 text-xs bg-blue-700 rounded-full"
+                      className="px-3 py-1 text-xs text-white bg-blue-700 rounded-full"
                     >
                       {cat}
                     </span>

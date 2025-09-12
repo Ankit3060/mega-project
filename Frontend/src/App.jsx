@@ -19,6 +19,10 @@ import ScrollToTop from './Layout/ScrollToTop.jsx';
 import EditBlog from './Components/EditBlog.jsx';
 import OtherUserProfile from './Components/OtherUserProfile.jsx';
 import AboutUs from './Pages/About.jsx';
+import Contact from './Pages/Contact.jsx';
+import Privacy from './Pages/Privacy.jsx';
+import TermsAndConditions from './Pages/Terms.jsx';
+import Help from './Pages/Help.jsx';
 
 function App() {
   return (
@@ -41,6 +45,10 @@ function App() {
           <Route path="/edit-blog/:blogId" element={<EditBlog />} />
           <Route path="/user/profile/:id" element={<OtherUserProfile />} />
           <Route path='/about' element={<AboutUs/>} />
+          <Route path='/contact' element={<Contact/>} />
+          <Route path='/privacy' element={<Privacy  />} />
+          <Route path='/terms' element={<TermsAndConditions />} />
+          <Route path='/help' element={<Help />} />
         </Route>
       </Routes> 
     </Router>
