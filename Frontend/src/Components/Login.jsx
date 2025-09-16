@@ -44,7 +44,7 @@ function Login() {
         : { userName: emailOrUsername, password };
 
       const response = await axios.post(
-        "http://localhost:4000/api/v1/auth/login",
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/auth/login`,
         loginData,
         {
           withCredentials: true,

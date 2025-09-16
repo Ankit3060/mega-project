@@ -23,7 +23,7 @@ function OtherUserProfile() {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/user/get-user/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/user/get-user/${id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setUser(response.data.user);
@@ -35,7 +35,7 @@ function OtherUserProfile() {
     const fetchUserBlog = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/blog/user-blog/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/user-blog/${id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setUserBlog(response.data.blogsOfUser);
@@ -47,7 +47,7 @@ function OtherUserProfile() {
     const fetchFollower = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/subscribe/follower/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/follower/${id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setFollowers(response.data.subscriberCount);
@@ -59,7 +59,7 @@ function OtherUserProfile() {
     const fetchFollowing = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/subscribe/following/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/following/${id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setFollowing(response.data.followingCount);
@@ -71,7 +71,7 @@ function OtherUserProfile() {
     const checkFollowStatus = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4000/api/v1/subscribe/check-follow/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/check-follow/${id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setIsFollowing(res.data.isFollowing);
@@ -90,7 +90,7 @@ function OtherUserProfile() {
   const toggleFollow = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/subscribe/follow-unfollow/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/follow-unfollow/${id}`,
         {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );

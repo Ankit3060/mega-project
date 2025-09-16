@@ -30,7 +30,7 @@ function VerifyOtp() {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:4000/api/v1/auth/verify-otp",
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/auth/verify-otp`,
         { email, otp },
         {
           headers: { "Content-Type": "application/json" },
@@ -62,7 +62,7 @@ function VerifyOtp() {
     try {
       setResendLoading(true);
       const response = await axios.post(
-        "http://localhost:4000/api/v1/auth/resend-otp",
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/auth/resend-otp`,
         { email },
         {
           headers: { "Content-Type": "application/json" },

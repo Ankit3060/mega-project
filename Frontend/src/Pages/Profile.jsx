@@ -22,7 +22,7 @@ function Profile() {
     const fetchUserBlog = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/blog/my-blog",
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/my-blog`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -38,7 +38,7 @@ function Profile() {
     const fetchFollower = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/subscribe/follower/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/follower/${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -55,7 +55,7 @@ function Profile() {
     const fetchFollowing = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/subscribe/following/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/following/${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

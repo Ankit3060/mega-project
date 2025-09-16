@@ -26,7 +26,7 @@ function EditBlog() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:4000/api/v1/blog/userBlog/${blogId}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/userBlog/${blogId}`,
           {
             withCredentials: true,
             headers: {
@@ -110,7 +110,7 @@ function EditBlog() {
       }
 
       const response = await axios.put(
-        `http://localhost:4000/api/v1/blog/update-blog/${blogId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/update-blog/${blogId}`,
         formData,
         {
           headers: {

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const refresh = async ()=>{
       try {
-        const res = await axios.post("http://localhost:4000/api/v1/auth/refresh-token",
+        const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/v1/auth/refresh-token`,
           {},
           {
             withCredentials: true

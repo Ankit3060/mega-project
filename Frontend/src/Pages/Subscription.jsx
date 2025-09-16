@@ -42,7 +42,7 @@ function FollowingUser() {
   const handleRemoveFollower = async (followerId) => {
     try {
       const res = await axios.delete(
-        `http://localhost:4000/api/v1/subscribe/remove-follower/${followerId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/remove-follower/${followerId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -62,7 +62,7 @@ function FollowingUser() {
   const handleUnfollow = async (bloggerId) => {
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/subscribe/follow-unfollow/${bloggerId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/follow-unfollow/${bloggerId}`,
         {},
         {
           headers: {

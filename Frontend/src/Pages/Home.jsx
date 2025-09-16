@@ -45,7 +45,7 @@ function Home() {
     try {
       const followingPromises = userIds.map(async (userId) => {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/subscribe/check-follow/${userId}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/check-follow/${userId}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -69,7 +69,7 @@ function Home() {
   const handleFollow = async (userId, isTopVoice = false) => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/v1/subscribe/follow-unfollow/${userId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/follow-unfollow/${userId}`,
         {},
         {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -101,7 +101,7 @@ function Home() {
     const fetchBLogs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/blog/all-blogs",
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/all-blogs`,
           {
             withCredentials: true,
             headers: {
@@ -153,7 +153,7 @@ function Home() {
         if (topVoiceCandidate) {
           try {
             const res = await axios.get(
-              `http://localhost:4000/api/v1/subscribe/check-follow/${topVoiceCandidate._id}`,
+              `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/check-follow/${topVoiceCandidate._id}`,
               { headers: { Authorization: `Bearer ${accessToken}` } }
             );
             setTopVoice(topVoiceCandidate);
@@ -190,7 +190,7 @@ function Home() {
   const likeBlog = async (blogId) => {
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/like/like-unlike/${blogId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/like/like-unlike/${blogId}`,
         {},
         {
           headers: { Authorization: `Bearer ${accessToken}` },

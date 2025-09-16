@@ -54,7 +54,7 @@ function ResetPassword() {
       };
 
       const response = await axios.put(
-        `http://localhost:4000/api/v1/auth/reset-password/${token}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/auth/reset-password/${token}`,
         payload,
         {
           headers: { "Content-Type": "application/json" },

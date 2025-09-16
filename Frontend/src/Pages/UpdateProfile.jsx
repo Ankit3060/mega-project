@@ -60,7 +60,7 @@ function UpdateProfile() {
     const loadingToast = toast.loading("Updating profile...");
     try {
       const updateUserData = await axios.put(
-        `http://localhost:4000/api/v1/user/update-details/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/user/update-details/${id}`,
         editableData,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -89,7 +89,7 @@ function UpdateProfile() {
 
         try {
           const response = await axios.put(
-            `http://localhost:4000/api/v1/user/update-details/${id}`,
+            `${import.meta.env.VITE_BACKEND_URL}api/v1/user/update-details/${id}`,
             formData,
             {
               headers: {
@@ -168,7 +168,7 @@ function UpdateProfile() {
     const loadingToast = toast.loading("Updating password...");
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/v1/user/update-password/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/user/update-password/${id}`,
         { oldPassword, newPassword, confirmNewPassword },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );

@@ -30,7 +30,7 @@ function Explore() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:4000/api/v1/blog/all-blogs`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/all-blogs`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           withCredentials: true,
@@ -53,7 +53,7 @@ function Explore() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:4000/api/v1/blog/category/${category}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/category/${category}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           withCredentials: true,

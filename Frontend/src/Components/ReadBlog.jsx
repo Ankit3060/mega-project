@@ -58,7 +58,7 @@ function ReadBlog() {
     const fetchBlog = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/blog/userBlog/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/userBlog/${id}`,
           {
             withCredentials: true,
             headers: {
@@ -71,7 +71,7 @@ function ReadBlog() {
         setLiked(response.data.blog.likes.includes(user._id));
 
         const commentRes = await axios.get(
-          `http://localhost:4000/api/v1/comment/getBlog-comment/${id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/comment/getBlog-comment/${id}`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -79,7 +79,7 @@ function ReadBlog() {
         setComments(commentRes.data.comments || []);
 
         const followRes = await axios.get(
-          `http://localhost:4000/api/v1/subscribe/check-follow/${response.data.blog.owner._id}`,
+          `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/check-follow/${response.data.blog.owner._id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setFollowing(followRes.data.isFollowing);
@@ -97,7 +97,7 @@ function ReadBlog() {
   const likeBlog = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/like/like-unlike/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/like/like-unlike/${id}`,
         {},
         {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -142,7 +142,7 @@ function ReadBlog() {
 
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/comment/create-comment/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/comment/create-comment/${id}`,
         { comment: newComment },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -170,7 +170,7 @@ function ReadBlog() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:4000/api/v1/comment/update-comment/${commentId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/comment/update-comment/${commentId}`,
         { newComment: editCommentText },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -194,8 +194,8 @@ function ReadBlog() {
   const handleDeleteComment = async (commentId, isOwner = false) => {
     try {
       const endpoint = isOwner
-        ? `http://localhost:4000/api/v1/comment/blogOwner/delete-comment/${commentId}`
-        : `http://localhost:4000/api/v1/comment/delete-comment/${commentId}`;
+        ? `${import.meta.env.VITE_BACKEND_URL}api/v1/comment/blogOwner/delete-comment/${commentId}`
+        : `${import.meta.env.VITE_BACKEND_URL}api/v1/comment/delete-comment/${commentId}`;
 
       await axios.delete(endpoint, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -226,7 +226,7 @@ function ReadBlog() {
     if (!blog?.owner?._id) return;
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/subscribe/follow-unfollow/${blog.owner._id}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/subscribe/follow-unfollow/${blog.owner._id}`,
         {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -240,7 +240,7 @@ function ReadBlog() {
   const handleDeleteBlog = async (blogId) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/v1/blog/delete-blog/${blogId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/delete-blog/${blogId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -269,7 +269,7 @@ function ReadBlog() {
   const handleDeleteBlogByAdmin = async (blogId) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/v1/blog/admin/delete-blog/${blogId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/admin/delete-blog/${blogId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -286,7 +286,7 @@ function ReadBlog() {
   const handleDeleteCommentByAdmin = async (commentId) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/v1/comment/admin/delete-comment/${commentId}`,
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/comment/admin/delete-comment/${commentId}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setComments(comments.filter((c) => c._id !== commentId));

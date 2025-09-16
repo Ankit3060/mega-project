@@ -73,7 +73,7 @@ function CreateBlog() {
         formData.append("blogImage", coverImage);
       }
       const response = await axios.post(
-        "http://localhost:4000/api/v1/blog/create",
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/blog/create`,
         formData,
         {
           headers: {
