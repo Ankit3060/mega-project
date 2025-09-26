@@ -16,6 +16,9 @@ import {notifyUserAccountDelete} from "./Service/notifyAccountDelete.js";
 import {updateOtpAttempt} from "./Service/updateOtpAttempt.js"
 import {updateTokenAttempt} from "./Service/updateTokenAttempt.js"
 
+import path from "path";
+import fs from "fs";
+
 export const app = express();
 
 config({path: "./Config/config.env"});
@@ -29,15 +32,15 @@ app.use(cors({
 
 app.use(cookieParser());
 
+const tmpDir = path.join(process.cwd(), "tmp");
+if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
 
 app.use(expressFileupload({
-    useTempFiles : true,
-    tempFileDir : "/temp/",
+    useTempFiles: true,
+    tempFileDir: tmpDir,
     parseNested: true,
     createParentPath: true,
-    limits: { 
-        fileSize: 50 * 1024 * 1024 
-    },
+    limits: { fileSize: 50 * 1024 * 1024 },
 }));
 
 
