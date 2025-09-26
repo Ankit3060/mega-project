@@ -245,7 +245,7 @@ export const updatePassword = async (req, res) => {
 
 
 export const getAllUser = async (req, res) => {
-  const user = await User.find({ accountVerified: true }).select("-refreshToken");
+  const user = await User.find({ accountVerified: true }).select("-refreshToken -resetTokenGeneratedTime -otpGenerated -otpFailedAttempt")
   return res.status(200).json({
     statusCode: 200,
     success: true,
