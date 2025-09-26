@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { FaHashnode, FaXTwitter } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import logo from '../assets/logo.png';
 
 function Footer() {
   return (
@@ -19,7 +20,7 @@ function Footer() {
           {/* Logo + About */}
           <div>
             <div className="flex items-center space-x-2">
-              <img src="./public/logo.png" alt="Logo" className="h-10 w-auto" />
+              <img src={logo} alt="Logo" className="h-10 w-auto" />
               <span className="text-lg font-semibold">AK Blog</span>
             </div>
             <p className="mt-4 text-sm text-gray-400">

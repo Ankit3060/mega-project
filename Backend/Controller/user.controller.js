@@ -1,8 +1,8 @@
 import { User } from "../Models/userModel.js";
+import { Subscribe } from "../Models/subscribeModel.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
-import { isMarkedAsUntransferable } from "worker_threads";
 
 export const updateUserDetails = async (req, res) => {
   const { userId } = req.params;
@@ -265,7 +265,6 @@ export const getCurrentUser = async (req, res) => {
 };
 
 
-
 export const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -300,3 +299,124 @@ export const getUserById = async (req, res) => {
     })
   }
 }
+
+
+
+export const withdrawalOfCreditsDetails = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    if (!userId) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "No user found",
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const subscriberCount = await Subscribe.countDocuments({ blogger: userId });
+    const credit = user.credits;
+    const totalAmount = (user.credits / 10) * subscriberCount;
+
+    const data = {
+      followerCount : subscriberCount,
+      credit : credit,
+      totalAmount : totalAmount
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      success: true,
+      message: `You have successfully fetched the withdrwal details`,
+      data
+    });
+  } catch (error) {
+    return res.status(500).json({
+      statusCode: 500,
+      success: false,
+      message: "Error in fetching withdrawal data",
+      error: error.message,
+    });
+  }
+};
+
+
+
+export const withdrawalOfCredits = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    if (!userId) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "No user found",
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const subscriberCount = await Subscribe.countDocuments({ blogger: userId });
+
+    if (subscriberCount < 1 || user.credits < 10) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "You need at least 10 subscribers and 400 credits to withdraw",
+      });
+    }
+
+    const { phone } = req.body;
+    if (!phone) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message: "Phone number required to make the payment",
+      });
+    }
+
+    const phoneRegex = /^(?!(\d)\1{9})[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({
+        statusCode: 400,
+        success: false,
+        message:
+          "Phone number must be 10 digits long, start with 6–9, and cannot be all the same digit",
+      });
+    }
+
+    const totalAmount = (user.credits / 10) * subscriberCount;
+
+    user.credits = 0;
+    await user.save();
+
+    return res.status(200).json({
+      statusCode: 200,
+      success: true,
+      message: `You have successfully withdrawn money of ₹${totalAmount}`,
+      totalAmount,
+      subscriberCount
+    });
+  } catch (error) {
+    return res.status(500).json({
+      statusCode: 500,
+      success: false,
+      message: "Error in withdrawal",
+      error: error.message,
+    });
+  }
+};

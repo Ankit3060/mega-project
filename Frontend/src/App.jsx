@@ -23,6 +23,7 @@ import Contact from './Pages/Contact.jsx';
 import Privacy from './Pages/Privacy.jsx';
 import TermsAndConditions from './Pages/Terms.jsx';
 import Help from './Pages/Help.jsx';
+import Credits from './Components/Credits.jsx';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Route path='/privacy' element={<Privacy  />} />
           <Route path='/terms' element={<TermsAndConditions />} />
           <Route path='/help' element={<Help />} />
+          <Route path='/credits' element={<Credits />} />
         </Route>
       </Routes> 
     </Router>

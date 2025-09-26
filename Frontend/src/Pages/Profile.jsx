@@ -14,6 +14,7 @@ function Profile() {
   const [following, setFollowing] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
+  const [credit, setCredit] = useState(0);
 
   const id = user?._id;
   const navigateTo = useNavigate();
@@ -69,10 +70,28 @@ function Profile() {
       }
     };
 
+    const fetchData = async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/user/get-withdraw-details`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setCredit(res.data.data.credit);
+    };
+
+    fetchData();
     fetchUserBlog();
     fetchFollower();
     fetchFollowing();
   }, [accessToken, id]);
+
+  const handleClickCredits = () => {
+    navigateTo("/credits");
+  };
 
   const userData = {
     fullName: user?.fullName,
@@ -82,6 +101,7 @@ function Profile() {
     followers: followers,
     following: following,
     blogs: userBlog || [],
+    credits: credit || 0,
   };
 
   return (
@@ -93,7 +113,7 @@ function Profile() {
       {/* Background Header Section */}
       <div className="relative">
         <div
-          className="h-48 md:h-64 bg-cover bg-center"
+          className="h-70 md:h-64 bg-cover bg-center"
           style={{
             backgroundImage: userData.backgroundImage
               ? `url("${userData.backgroundImage}")`
@@ -101,6 +121,15 @@ function Profile() {
           }}
         >
           <div className="absolute inset-0 bg-opacity-30"></div>
+        </div>
+
+        <div className="absolute bottom-4 right-4 z-20">
+          <button
+            onClick={handleClickCredits}
+            className="px-4 py-2 bg-green-600 cursor-pointer text-white rounded-lg"
+          >
+            Credits: {userData.credits}
+          </button>
         </div>
 
         {/* Profile Info Overlay */}
@@ -190,7 +219,9 @@ function Profile() {
             <div
               key={blog._id}
               className={`rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ${
-                theme === "dark" ? "bg-gray-800 text-white hover:shadow-blue-400" : "bg-white text-gray-800"
+                theme === "dark"
+                  ? "bg-gray-800 text-white hover:shadow-blue-400"
+                  : "bg-white text-gray-800"
               }`}
             >
               <div className="h-48 overflow-hidden">
@@ -218,7 +249,9 @@ function Profile() {
                     theme === "dark" ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
-                  <span>{new Date(blog.createdAt).toLocaleDateString("en-IN")}</span>
+                  <span>
+                    {new Date(blog.createdAt).toLocaleDateString("en-IN")}
+                  </span>
                   <span>{blog.readTime || "4 Min read"}</span>
                 </div>
 

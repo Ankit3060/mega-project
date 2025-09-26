@@ -125,7 +125,7 @@ function OtherUserProfile() {
       {/* Background Header Section */}
       <div className="relative">
         <div
-          className="h-48 md:h-64 bg-cover bg-center"
+          className="h-70 md:h-64 bg-cover bg-center"
           style={{
             backgroundImage: userData.backgroundImage
               ? `url("${userData.backgroundImage}")`

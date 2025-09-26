@@ -11,6 +11,7 @@ import { useSearch } from "../Context/searchContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useTheme } from "../Context/themeContext";
+import logo from '../assets/logo.png';
 
 function Header() {
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
@@ -132,7 +133,7 @@ function Header() {
             }}
             className="flex items-center space-x-3 cursor-pointer"
           >
-            <img src="./public/logo.png" alt="Logo" className="h-9 w-auto" />
+            <img src={logo} alt="Logo" className="h-9 w-auto" />
             <div className="flex flex-col">
               <span className="hidden sm:block text-xl font-bold tracking-wide">
                 AK Blog

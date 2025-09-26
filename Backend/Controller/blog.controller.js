@@ -94,6 +94,17 @@ export const createNewBlog = async (req, res) => {
         const postUrl = `${process.env.FRONTEND_URL}/blog/my-blog`;
         sendSuccessfulPostMail(postUrl, req.user.email);
 
+        let user = await User.findById(ownerId);
+        if(!user){
+            return res.status(404).json({
+                statusCode: 404,
+                success: false,
+                message : "User not found"
+            })
+        }
+        user.credits = (user.credits || 0) + 10;
+        await user.save();
+
         res.status(201).json({
             statusCode: 201,
             success: true,
@@ -263,6 +274,10 @@ export const deleteBlog = async (req, res) => {
             });
         }
         await Comment.deleteMany({ blogId });
+
+        let user = await User.findById(req.user._id);
+        user.credits = Math.max(0, user.credits - 9);
+        await user.save();
 
         return res.status(200).json({
             statusCode: 200,
