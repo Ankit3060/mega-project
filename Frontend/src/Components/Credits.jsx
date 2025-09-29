@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../Context/authContext";
 import { useNavigate } from "react-router-dom";
 import { FaWallet, FaUsers, FaPhoneAlt, FaMoneyBillWave } from "react-icons/fa";
+import { AiFillLike } from "react-icons/ai";
 
 function Credits() {
   const { user, accessToken } = useAuth();
@@ -27,6 +28,8 @@ function Credits() {
           setData({
             credit: res.data.data.credit ?? 0,
             followerCount: res.data.data.followerCount ?? 0,
+            totalAmount: res.data.data.totalAmount ?? 0,
+            totalLikes: res.data.data.totalLikes ?? 0
           });
         }
       } catch (err) {
@@ -65,8 +68,8 @@ function Credits() {
     }
   };
 
-  const minFollowers = 10;
-  const minCredits = 400;
+  const minFollowers = 5;
+  const minCredits = 10;
   const eligible = data.followerCount >= minFollowers && data.credit >= minCredits;
 
   return (
@@ -82,7 +85,7 @@ function Credits() {
           </h2>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div className="bg-green-50 rounded-xl p-4 flex flex-col items-center shadow">
               <FaMoneyBillWave className="text-green-500 text-3xl mb-2" />
               <p className="text-gray-700 text-sm">Credits Available</p>
@@ -97,6 +100,13 @@ function Credits() {
                 {data.followerCount}
               </span>
             </div>
+            <div className="bg-blue-50 rounded-xl p-4 flex flex-col items-center shadow">
+              <AiFillLike className="text-blue-500 text-3xl mb-2" />
+              <p className="text-gray-700 text-sm">Total Likes</p>
+              <span className="text-lg font-bold text-blue-600">
+                {data.totalLikes}
+              </span>
+            </div>
           </div>
 
           {/* Eligibility */}
@@ -108,7 +118,7 @@ function Credits() {
               <p className="text-center text-gray-700">
                 Amount You Get:{" "}
                 <span className="font-bold text-green-700">
-                  ₹{(data.credit / 10) * data.followerCount}
+                  ₹{data.totalAmount}
                 </span>
               </p>
 

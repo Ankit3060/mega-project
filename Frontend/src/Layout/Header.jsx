@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Bell, X, Menu, Sun, Moon } from "lucide-react";
+import { X, Menu, Sun, Moon } from "lucide-react";
 import { IoMdHome } from "react-icons/io";
 import { MdExplore,MdAddIcCall } from "react-icons/md";
 import { FaPenFancy } from "react-icons/fa";
-import { FaCircleInfo } from "react-icons/fa6";
+import { FaCircleInfo,FaCreditCard } from "react-icons/fa6";
 import { IoSearchSharp } from "react-icons/io5";
 import { useAuth } from "../Context/authContext";
 import { useSearch } from "../Context/searchContext";
@@ -15,9 +15,9 @@ import logo from '../assets/logo.png';
 
 function Header() {
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
-  const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [credit, setCredit] = useState(0);
 
   const {isAuthenticated,setIsAuthenticated,user,setUser,accessToken,setAccessToken,} = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -27,7 +27,6 @@ function Header() {
   const location = useLocation();
 
   const avatarRef = useRef(null);
-  const notifRef = useRef(null);
 
   // Clear search when navigating away from home page
   useEffect(() => {
@@ -40,9 +39,6 @@ function Header() {
     function handleClickOutside(e) {
       if (avatarRef.current && !avatarRef.current.contains(e.target)) {
         setIsAvatarOpen(false);
-      }
-      if (notifRef.current && !notifRef.current.contains(e.target)) {
-        setIsNotifOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -112,6 +108,23 @@ function Header() {
     }
     setSearchOpen(false);
   };
+
+  useEffect(() => {
+    const fetchData = async()=>{
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}api/v1/user/get-withdraw-details`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setCredit(res.data.data.credit);
+    }
+    fetchData();
+  }, [accessToken])
+  
 
   return (
     <>
@@ -260,27 +273,21 @@ function Header() {
                 <FaPenFancy className="text-lg" />
                 <span className="hidden sm:inline">Write</span>
               </NavLink>
+              
+              
+              <NavLink
+                to="/credits"
+                className="flex items-center gap-1 text-sm font-medium bg-green-600 px-3 py-1 rounded-lg transition"
+              >
+                <FaCreditCard className="text-lg" />
+                <span className="hidden sm:inline">Credits:</span><span className="">{credit}</span>
+              </NavLink>
 
               <button 
                 onClick={toggleTheme}
                 className="p-2 cursor-pointer rounded-full hover:bg-white/10 transition">
                 {theme === 'light' ?<Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-gray-200" />}
               </button>
-
-              <div className="relative" ref={notifRef}>
-                <button
-                  onClick={() => setIsNotifOpen(!isNotifOpen)}
-                  className="relative p-2 rounded-full hover:text-indigo-300 cursor-pointer transition"
-                >
-                  <Bell className="w-5 h-5" />
-                </button>
-
-                {isNotifOpen && (
-                  <div className="absolute right-0 mt-3 w-64 bg-[#1e293b] border border-gray-700 rounded-lg shadow-lg py-3 px-4 text-sm text-gray-300 z-50">
-                    <p className="text-center">🔔 No new notifications</p>
-                  </div>
-                )}
-              </div>
 
               {/* Mobile Search Button */}
               <button

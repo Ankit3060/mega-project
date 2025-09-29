@@ -1,5 +1,6 @@
 import { User } from "../Models/userModel.js";
 import { Subscribe } from "../Models/subscribeModel.js";
+import { Blog } from "../Models/blogModel.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
@@ -323,13 +324,20 @@ export const withdrawalOfCreditsDetails = async (req, res) => {
     }
 
     const subscriberCount = await Subscribe.countDocuments({ blogger: userId });
+    const blogs = await Blog.find({ owner: userId });
+
     const credit = user.credits;
-    const totalAmount = (user.credits / 10) * subscriberCount;
+    const totalLikes = blogs.reduce((acc, blog) => acc + blog.likes.length, 0);
+    const availableLikes = totalLikes - (user.withdrawnLikes || 0);
+
+    const totalCredits = (credit + (availableLikes * 10)) / 10;
+    const totalAmount = totalCredits * subscriberCount;
 
     const data = {
       followerCount : subscriberCount,
-      credit : credit,
-      totalAmount : totalAmount
+      totalLikes,
+      credit : totalCredits,
+      totalAmount : totalAmount,
     }
 
     return res.status(200).json({
@@ -372,11 +380,11 @@ export const withdrawalOfCredits = async (req, res) => {
 
     const subscriberCount = await Subscribe.countDocuments({ blogger: userId });
 
-    if (subscriberCount < 1 || user.credits < 10) {
+    if (subscriberCount < 5 || user.credits < 100) {
       return res.status(400).json({
         statusCode: 400,
         success: false,
-        message: "You need at least 10 subscribers and 400 credits to withdraw",
+        message: "You need at least 5 subscribers and 100 credits to withdraw",
       });
     }
 
@@ -399,9 +407,15 @@ export const withdrawalOfCredits = async (req, res) => {
       });
     }
 
-    const totalAmount = (user.credits / 10) * subscriberCount;
+    const blogs = await Blog.find({ owner: userId });
+    const totalLikes = blogs.reduce((acc, blog) => acc + blog.likes.length, 0);
+    const availableLikes = totalLikes - (user.withdrawnLikes || 0);
+    const totalCredits = (user.credits + (availableLikes * 10)) / 10;
+
+    const totalAmount = totalCredits * subscriberCount;
 
     user.credits = 0;
+    user.withdrawnLikes = (user.withdrawnLikes || 0) + availableLikes;
     await user.save();
 
     return res.status(200).json({
@@ -409,7 +423,8 @@ export const withdrawalOfCredits = async (req, res) => {
       success: true,
       message: `You have successfully withdrawn money of ₹${totalAmount}`,
       totalAmount,
-      subscriberCount
+      subscriberCount,
+      totalLikes,
     });
   } catch (error) {
     return res.status(500).json({

@@ -102,7 +102,7 @@ export const createNewBlog = async (req, res) => {
                 message : "User not found"
             })
         }
-        user.credits = (user.credits || 0) + 10;
+        user.credits = (user.credits || 0) + 0.5;
         await user.save();
 
         res.status(201).json({
@@ -276,7 +276,7 @@ export const deleteBlog = async (req, res) => {
         await Comment.deleteMany({ blogId });
 
         let user = await User.findById(req.user._id);
-        user.credits = Math.max(0, user.credits - 9);
+        user.credits = Math.max(0, user.credits - 0.5);
         await user.save();
 
         return res.status(200).json({
