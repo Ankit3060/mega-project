@@ -79,7 +79,7 @@ export const generateVerificationOtpEmailTemplate = (otpCode) => {
                 <div style="margin-top: 20px;">
                     <p style="color: #4a5568; margin: 0; font-size: 16px;">
                         Best regards,<br/>
-                        <strong style="color: #4c51bf; font-size: 18px;">Team AK Blog</strong>
+                        <strong style="color: #4c51bf; font-size: 18px;">Team Quick Blog</strong>
                     </p>
                 </div>
                 
@@ -232,7 +232,7 @@ export const generateSuccessfulSubmissionBlogTemplate = (blogTitle, blogUrl, aut
                 <div style="margin-top: 30px;">
                     <p style="color: #4b5563; margin: 0; font-size: 16px;">
                         Keep writing amazing content!<br/>
-                        <strong style="color: #3b82f6; font-size: 20px;">The AK Blog Team</strong>
+                        <strong style="color: #3b82f6; font-size: 20px;">The Quick Blog Team</strong>
                     </p>
                 </div>
                 
@@ -296,7 +296,7 @@ export const generatePasswordResetEmailTemplate = (resetPasswordUrl) => {
                         Reset Your Password
                     </h2>
                     <p style="color: #718096; font-size: 16px; line-height: 1.6; margin: 0;">
-                        We received a request to reset your password for your AK Blog account. 
+                        We received a request to reset your password for your Quick Blog account. 
                         Click the button below to create a new password.
                     </p>
                 </div>
@@ -377,7 +377,7 @@ export const generatePasswordResetEmailTemplate = (resetPasswordUrl) => {
                 <div style="margin-top: 30px;">
                     <p style="color: #4b5563; margin: 0; font-size: 16px;">
                         Stay secure and keep blogging!<br/>
-                        <strong style="color: #dc2626; font-size: 20px;">The AK Blog Team</strong>
+                        <strong style="color: #dc2626; font-size: 20px;">The Quick Blog Team</strong>
                     </p>
                 </div>
                 
@@ -557,7 +557,7 @@ export const generateAccountDeleteTemplate = (verifyLink, otp) => {
                 <div style="margin-top: 30px;">
                     <p style="color: #4b5563; margin: 0; font-size: 16px;">
                         We're here to help keep your account secure!<br/>
-                        <strong style="color: #d97706; font-size: 20px;">The AK Blog Team</strong>
+                        <strong style="color: #d97706; font-size: 20px;">The Quick Blog Team</strong>
                     </p>
                 </div>
                 
@@ -625,7 +625,7 @@ export const generatePostPublishedSuccessfullyTemplate = (postUrl) => {
                         🚀 Amazing work!
                     </h2>
                     <p style="color: #6b7280; font-size: 16px; line-height: 1.6; margin: 0;">
-                        Your post has been successfully published and is now live on AK Blog. 
+                        Your post has been successfully published and is now live on Quick Blog. 
                         It's ready to inspire and engage our community of readers.
                     </p>
                 </div>
@@ -676,7 +676,7 @@ export const generatePostPublishedSuccessfullyTemplate = (postUrl) => {
                         Get more eyes on your content by sharing across platforms:
                     </p>
                     <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                        <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent('Check out my latest post on AK Blog!')}" style="display: inline-block; background: #1da1f2; color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);">
+                        <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent('Check out my latest post on Quick Blog!')}" style="display: inline-block; background: #1da1f2; color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);">
                             🐦 Twitter
                         </a>
                         <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}" style="display: inline-block; background: #4267b2; color: white; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(66, 103, 178, 0.3);">
@@ -707,7 +707,7 @@ export const generatePostPublishedSuccessfullyTemplate = (postUrl) => {
                         🌟 You're Part of Something Amazing
                     </h3>
                     <p style="color: #047857; margin: 0; font-size: 14px; line-height: 1.6;">
-                        Your post joins our thriving community of <strong>15,000+ active readers</strong> and <strong>500+ talented writers</strong> on AK Blog. Together, we're building a platform where great content finds its audience.
+                        Your post joins our thriving community of <strong>15,000+ active readers</strong> and <strong>500+ talented writers</strong> on Quick Blog. Together, we're building a platform where great content finds its audience.
                     </p>
                 </div>
                 
@@ -730,7 +730,7 @@ export const generatePostPublishedSuccessfullyTemplate = (postUrl) => {
                 <div style="margin-top: 30px;">
                     <p style="color: #4b5563; margin: 0; font-size: 16px;">
                         Keep creating amazing content!<br/>
-                        <strong style="color: #10b981; font-size: 20px;">The AK Blog Team</strong>
+                        <strong style="color: #10b981; font-size: 20px;">The Quick Blog Team</strong>
                     </p>
                 </div>
                 
@@ -797,7 +797,7 @@ export const generatePostUpdatedSuccessfullyTemplate = (postUrl) => {
                         🚀 Nice Update!
                     </h2>
                     <p style="color: #6b7280; font-size: 16px; line-height: 1.6; margin: 0;">
-                        Your post has been successfully updated on AK Blog. 
+                        Your post has been successfully updated on Quick Blog. 
                         It's ready to engage and inform your readers.
                     </p>
                 </div>
@@ -845,7 +845,7 @@ export const generatePostUpdatedSuccessfullyTemplate = (postUrl) => {
             <div style="background: #f9fafb; padding: 40px; text-align: center; border-top: 1px solid #e5e7eb;">
                 <p style="color: #4b5563; font-size: 16px; margin: 0;">
                     Keep creating amazing content!<br/>
-                    <strong style="color: #f59e0b; font-size: 20px;">The AK Blog Team</strong>
+                    <strong style="color: #f59e0b; font-size: 20px;">The Quick Blog Team</strong>
                 </p>
             </div>
             

@@ -6,7 +6,7 @@ export async function sendVerificationCode(verificationCode, email, res){
         const message = generateVerificationOtpEmailTemplate(verificationCode);
         sendEmail({
             email,
-            subject: "Verification Code from AK Blog Team",
+            subject: "Verification Code from Quick Blog Team",
             message
         });
 

@@ -1,5 +1,5 @@
-- **Frontend url**: [Netlify](https://ak-blogs.netlify.app)  <-- click on this link
-# AK Blog Project 
+- **Frontend url**: [Netlify](https://quick-blogs-v1.netlify.app)  <-- click on this link
+# Quick Blog Project 
 
 A full-stack blogging platform where users can create, read, update, and delete blogs, interact with posts through likes and comments, and explore blogs by categories.  
 
@@ -109,7 +109,7 @@ npm run dev
 ## 📂 Project Structure  
 
 ```
-ak-blog/
+quick-blog/
 │── backend/         # Express + MongoDB API
 │   ├── models/      # Mongoose schemas
 │   ├── routes/      # Express routes
@@ -144,7 +144,7 @@ ak-blog/
 
 ## 🌐 Deployment  
 
-- **Frontend**: [Netlify](https://ak-blogs.netlify.app) 
+- **Frontend**: [Netlify](https://quick-blogs-v1.netlify.app) 
 
 ## ✨ Future Enhancements  
  

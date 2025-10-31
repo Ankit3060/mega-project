@@ -21,7 +21,7 @@ function Footer() {
           <div>
             <div className="flex items-center space-x-2">
               <img src={logo} alt="Logo" className="h-10 w-auto" />
-              <span className="text-lg font-semibold">AK Blog</span>
+              <span className="text-lg font-semibold">Quick Blog</span>
             </div>
             <p className="mt-4 text-sm text-gray-400">
               A social platform to share stories, connect with others, and
@@ -164,7 +164,7 @@ function Footer() {
 
         {/* Bottom Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center mt-6 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} AK Blog. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} Quick Blog. All Rights Reserved.</p>
           <p className="mt-2 sm:mt-0">Made with ❤️ by Ankit</p>
         </div>
       </div>

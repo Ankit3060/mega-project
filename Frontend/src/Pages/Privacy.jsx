@@ -43,7 +43,7 @@ function PrivacyPolicy() {
             }`}
           >
             <p>
-              Welcome to AK Blog ("we," "us," or "our"). We are committed to
+              Welcome to Quick Blog ("we," "us," or "our"). We are committed to
               protecting your privacy. This Privacy Policy explains how we
               collect, use, disclose, and safeguard your information when you
               use our platform. Please read this policy carefully. If you do not
@@ -199,7 +199,7 @@ function PrivacyPolicy() {
             </p>
             <p>
               <a
-                href="mailto:support@akblog.com"
+                href="mailto:ankit330660@gmail.com"
                 className={`font-semibold transition ${
                   isDark
                     ? "text-blue-400 hover:text-blue-300"

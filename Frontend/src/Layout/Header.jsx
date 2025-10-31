@@ -149,7 +149,7 @@ function Header() {
             <img src={logo} alt="Logo" className="h-9 w-auto" />
             <div className="flex flex-col">
               <span className="hidden sm:block text-xl font-bold tracking-wide">
-                AK Blog
+                Quick Blog
               </span>
               <span className="hidden md:inline text-xs text-gray-400">
                 A Social Media for Sharing Stories

@@ -6,7 +6,7 @@ export async function sendPasswordResetCode(resetPasswordUrl, email, res){
         const message = generatePasswordResetEmailTemplate(resetPasswordUrl);
         sendEmail({
             email,
-            subject: "Password Reset Code from AK Blog Team",
+            subject: "Password Reset Code from Quick Blog Team",
             message
         });
 

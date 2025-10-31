@@ -44,8 +44,8 @@ function TermsAndConditions() {
           >
             <p>
               Please read these Terms and Conditions ("Terms", "Terms and
-              Conditions") carefully before using the AK Blog platform (the
-              "Service") operated by AK Blog ("us", "we", or "our").
+              Conditions") carefully before using the Quick Blog platform (the
+              "Service") operated by Quick Blog ("us", "we", or "our").
             </p>
             <p>
               Your access to and use of the Service is conditioned upon your
@@ -111,7 +111,7 @@ function TermsAndConditions() {
             <p>
               The Service and its original content (excluding Content provided
               by users), features, and functionality are and will remain the
-              exclusive property of AK Blog and its licensors. The Service is
+              exclusive property of Quick Blog and its licensors. The Service is
               protected by copyright, trademark, and other laws of both India
               and foreign countries.
             </p>
@@ -135,7 +135,7 @@ function TermsAndConditions() {
             
             <h2 id="liability">7. Limitation of Liability</h2>
             <p>
-              In no event shall AK Blog, nor its directors, employees, partners,
+              In no event shall Quick Blog, nor its directors, employees, partners,
               agents, suppliers, or affiliates, be liable for any indirect,
               incidental, special, consequential, or punitive damages arising
               out of your use of the Service.

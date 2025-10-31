@@ -96,7 +96,7 @@ function Signup() {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] px-4  mb-[-2.5rem]">
       <div className="w-full max-w-lg bg-[#1e293b]/90 p-10 sm:p-16 rounded-xl shadow-lg border border-gray-700 flex flex-col items-center">
         <h2 className="text-3xl font-bold text-white text-center mb-4">
-          Join AK Blog
+          Join Quick Blog
         </h2>
         <p className="text-gray-300 text-center mb-6">
           Create your account to get started

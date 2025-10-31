@@ -128,7 +128,7 @@ function HelpCenter() {
             }`}
           >
             Have questions? We're here to help. Find answers to common
-            questions about using AK Blog.
+            questions about using Quick Blog.
           </p>
         </div>
 

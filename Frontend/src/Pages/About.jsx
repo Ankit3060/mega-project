@@ -77,7 +77,7 @@ function AboutUs() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            About <span className="text-blue-600">AK Blog</span>
+            About <span className="text-blue-600">Quick Blog</span>
           </h1>
           <p className={`text-xl max-w-3xl mx-auto leading-relaxed ${isDark ? "text-gray-300" : "text-gray-600"}`}>
             We're building the future of digital storytelling, where every voice matters 
@@ -104,7 +104,7 @@ function AboutUs() {
             <div>
               <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
               <p className={`text-lg leading-relaxed mb-6 ${isDark ? "text-gray-300" : "text-gray-700"}`}>
-                AK Blog was born from a simple belief: everyone has a story worth sharing. 
+                Quick Blog was born from a simple belief: everyone has a story worth sharing. 
                 We've created a platform where writers can express themselves freely, connect 
                 with like-minded individuals, and build meaningful relationships through the 
                 power of storytelling.
@@ -229,7 +229,7 @@ function AboutUs() {
         <div className="text-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 text-white shadow-xl hover:shadow-blue-300">
           <h2 className="text-3xl font-bold mb-4">Ready to Share Your Story?</h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of writers who have already made AK Blog their home for creative expression.
+            Join thousands of writers who have already made Quick Blog their home for creative expression.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
